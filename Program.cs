@@ -5,8 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<PSPDatabaseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("PSPLocalDatabaseContext")));
+builder.Services.AddDbContext<PSPDatabaseContext>(opt =>
+    opt.UseInMemoryDatabase("PSP"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
