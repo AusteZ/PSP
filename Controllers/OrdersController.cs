@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PSP.Models;
 
 namespace PSP.Controllers
 {
@@ -7,24 +8,45 @@ namespace PSP.Controllers
     [Route("[controller]")]
     public class OrdersController : Controller
     {
+        private readonly PSPDatabaseContext _db;
+
+        public OrdersController(PSPDatabaseContext db) 
+        {
+            _db = db;
+        }
+
         // GET: Orders/:id
         [HttpGet("{id}")]
         public ActionResult Index(int id)
         {
-            return Ok(id);
+            Order? order = _db.Orders.Find(id);
+
+            if (order != null) 
+            {
+                return Ok(order);
+            }
+            else
+            {
+                return StatusCode(404);
+            }
         }
 
         // POST: Orders
         [HttpPost]
-        public ActionResult Post(IFormCollection collection)
+        public ActionResult Post(IFormCollection requestParams)
         {
             try
             {
-                return Ok("POST Lol!");
+                Order order = new Order();
+                order.PaymentStatus = requestParams["paymentStatus"];
+
+                _db.Orders.Add(order);
+                _db.SaveChanges();
+                return Ok();
             }
             catch
             {
-                return Ok("NOT Lol!");
+                return BadRequest();
             }
         }
 
@@ -34,11 +56,11 @@ namespace PSP.Controllers
         {
             try
             {
-                return Ok("PUT Lol!");
+                return Ok();
             }
             catch
             {
-                return Ok("PUT NOT LOL");
+                return BadRequest();
             }
         }
 
@@ -46,7 +68,7 @@ namespace PSP.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            return Ok("deleted!");
+            return Ok();
         }
     }
 }
