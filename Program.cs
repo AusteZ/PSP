@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using PSP;
 using PSP.Models;
+using PSP.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<ServicesService>();
+builder.Services.AddScoped<ServiceSlotsService>();
+builder.Services.AddScoped<CancellationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,6 +28,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

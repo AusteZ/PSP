@@ -11,4 +11,7 @@ public class PSPDatabaseContext : DbContext
     }
 
     public DbSet<Order> Orders { get; set; } = null!;
+    public DbSet<Service> Services { get; set; } = null!;
+    public DbSet<ServiceSlot> ServiceSlots { get; set; } = null!;
+    public DbSet<Cancellation> Cancellations { get; set; } = null!;
 }
