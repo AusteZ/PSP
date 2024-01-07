@@ -1,27 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PSP.Models;
+﻿using PSP.Models;
+using PSP.Repositories;
 
 namespace PSP.Services
 {
-    public abstract class BaseService<T, TCreate> where T : class where TCreate : class
+    public abstract class BaseService<T, TCreate> : IBaseService<T, TCreate> where T : class where TCreate : class
     {
-        protected readonly DbContext _dbContext;
-        protected readonly DbSet<T> _dbSet;
+        protected readonly IBaseRepository<T> _repository;
 
-        protected BaseService(DbContext dbContext)
+        protected BaseService(IBaseRepository<T> repository)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _dbSet = _dbContext.Set<T>();
+            _repository = repository;
         }
 
         public virtual IEnumerable<T> GetAll()
         {
-            return _dbSet.ToList();
+            return _repository.FindAll();
         }
 
         public virtual T Get(int id)
         {
-            var entity = _dbSet.Find(id);
+            var entity = _repository.Find(id);
             CheckFor404(entity, id);
             return entity!;
         }
@@ -36,9 +34,8 @@ namespace PSP.Services
 
         public virtual T Add(TCreate entity)
         {
-            var addedEntity = _dbSet.Add(ModelToEntity(entity));
-            _dbContext.SaveChanges();
-            return addedEntity.Entity;
+            var entityToAdd = ModelToEntity(entity);
+            return _repository.Add(entityToAdd);
         }
 
         public virtual T Update(TCreate creationModel, int id)
@@ -47,25 +44,20 @@ namespace PSP.Services
             Get(id);
 
             var entity = ModelToEntity(creationModel, id);
-            _dbSet.Attach(entity);
-            _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            _repository.Update(entity);
             return entity;
         }
 
         public virtual T Update(T entity)
         {
-            _dbSet.Attach(entity);
-            _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            _repository.Update(entity);
             return entity;
         }
 
         public virtual void Delete(int id)
         {
             var entity = Get(id);
-            _dbSet.Remove(entity);
-            _dbContext.SaveChanges();
+            _repository.Remove(entity);
         }
 
         protected void CheckFor404(T? entity, int id)

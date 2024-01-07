@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PSP.Models;
+using PSP.Models.RequestBodies;
 using PSP.Services;
+using PSP.Services.Interfaces;
 
 namespace PSP.Controllers
 {
@@ -9,10 +11,10 @@ namespace PSP.Controllers
     public class ServiceSlotsController : Controller
     {
         private readonly PSPDatabaseContext _db;
-        private readonly ServiceSlotsService _service;
-        private readonly CancellationService _cancellationService;
+        private readonly IServiceSlotsService _service;
+        private readonly IBaseService<Cancellation, CancellationCreate> _cancellationService;
 
-        public ServiceSlotsController(PSPDatabaseContext db, ServiceSlotsService service, CancellationService cancellationService)
+        public ServiceSlotsController(PSPDatabaseContext db, IServiceSlotsService service, IBaseService<Cancellation, CancellationCreate> cancellationService)
         {
             _db = db;
             _service = service;
@@ -20,7 +22,7 @@ namespace PSP.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetAll([FromQuery] int? employeeIdFilter, [FromQuery] int? serviceIdFilter, [FromQuery] bool isFree)
+        public ActionResult GetAll([FromQuery] int? employeeIdFilter, [FromQuery] int? serviceIdFilter, [FromQuery] bool? isFree)
         {
             return Ok(_service.GetFiltered(employeeIdFilter, serviceIdFilter, isFree));
         }

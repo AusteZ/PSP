@@ -8,9 +8,9 @@ namespace PSP.Controllers
     [Route("[controller]")]
     public class ServicesController : Controller
     {
-        private readonly ServicesService _service;
+        private readonly IBaseService<Service, ServiceCreate> _service;
 
-        public ServicesController(ServicesService service)
+        public ServicesController(IBaseService<Service, ServiceCreate> service)
         {
             _service = service;
         }

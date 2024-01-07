@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PSP.Models;
+using PSP.Repositories;
 
 namespace PSP.Services
 {
     public class ServicesService : BaseService<Service, ServiceCreate>
     {
-        public ServicesService(PSPDatabaseContext db) : base(db)
+        public ServicesService(IBaseRepository<Service> repository) : base(repository)
         { }
 
         protected override Service ModelToEntity(ServiceCreate entity, int id = 0)

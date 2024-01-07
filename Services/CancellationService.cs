@@ -1,11 +1,12 @@
 ﻿using PSP.Models;
 using PSP.Models.RequestBodies;
+using PSP.Repositories;
 
 namespace PSP.Services
 {
     public class CancellationService : BaseService<Cancellation, CancellationCreate>
     {
-        public CancellationService(PSPDatabaseContext db) : base(db)
+        public CancellationService(IBaseRepository<Cancellation> repository) : base(repository)
         { }
 
         protected override Cancellation ModelToEntity(CancellationCreate entity, int id = 0)
@@ -15,6 +16,7 @@ namespace PSP.Services
                 Id = id,
                 CancellationTime = entity.CancellationTime,
                 ServiceSlotId = entity.ServiceSlotId,
+                CustomerId = entity.CustomerId
             };
         }
     }
