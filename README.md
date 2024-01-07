@@ -8,6 +8,7 @@
  2. If not using Visual studio: "dotnet run" in terminal, root project directory
  3. If using Visual Studio: File -> Open Solution/Folder -> Navigate to cloned repo -> open PSP.sln
  4. If using Visual Studio: Press the green little arrow in the top middle of the screen.
+ 5. Open 'http://localhost:5000/swagger/index.html' in your browser to use the Swagger interface.
 
 # Troubleshooting
 Since I didn't test these instructions xd they might not work
