@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PSP.Models;
+using PSP.Models.Entities;
 
 namespace PSP.Repositories
 {

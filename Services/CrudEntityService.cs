@@ -1,13 +1,16 @@
-﻿using PSP.Models;
+﻿using PSP.Models.DTOs;
+using PSP.Models.Entities;
+using PSP.Models.Exceptions;
 using PSP.Repositories;
+using PSP.Services.Interfaces;
 
 namespace PSP.Services
 {
-    public abstract class BaseService<T, TCreate> : IBaseService<T, TCreate> where T : class where TCreate : class
+    public abstract class CrudEntityService<T, TCreate> : ICrudEntityService<T, TCreate> where T : class where TCreate : class
     {
         protected readonly IBaseRepository<T> _repository;
 
-        protected BaseService(IBaseRepository<T> repository)
+        protected CrudEntityService(IBaseRepository<T> repository)
         {
             _repository = repository;
         }

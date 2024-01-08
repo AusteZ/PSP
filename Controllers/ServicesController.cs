@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PSP.Models;
-using PSP.Services;
+using PSP.Models.DTOs;
+using PSP.Models.Entities;
+using PSP.Services.Interfaces;
 
 namespace PSP.Controllers
 {
@@ -8,41 +9,41 @@ namespace PSP.Controllers
     [Route("[controller]")]
     public class ServicesController : Controller
     {
-        private readonly IBaseService<Service, ServiceCreate> _service;
+        private readonly ICrudEntityService<Service, ServiceCreate> _entityService;
 
-        public ServicesController(IBaseService<Service, ServiceCreate> service)
+        public ServicesController(ICrudEntityService<Service, ServiceCreate> entityService)
         {
-            _service = service;
+            _entityService = entityService;
         }
 
         [HttpGet]
         public ActionResult GetAll()
         {
-            return Ok(_service.GetAll());
+            return Ok(_entityService.GetAll());
         }
 
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return Ok(_service.Get(id));
+            return Ok(_entityService.Get(id));
         }
 
         [HttpPost]
         public ActionResult Post([FromBody] ServiceCreate body)
         {
-            return Ok(_service.Add(body));
+            return Ok(_entityService.Add(body));
         }
 
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody]ServiceCreate body)
         {
-            return Ok(_service.Update(body, id));
+            return Ok(_entityService.Update(body, id));
         }
 
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            _service.Delete(id);
+            _entityService.Delete(id);
             return NoContent();
         }
     }

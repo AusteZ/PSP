@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PSP.Models;
+﻿using PSP.Models.DTOs;
+using PSP.Models.Entities;
 using PSP.Repositories;
 
 namespace PSP.Services
 {
-    public class ServicesService : BaseService<Service, ServiceCreate>
+    public class ServicesService : CrudEntityService<Service, ServiceCreate>
     {
         public ServicesService(IBaseRepository<Service> repository) : base(repository)
         { }

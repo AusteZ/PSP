@@ -1,10 +1,10 @@
-﻿using PSP.Models;
-using PSP.Models.RequestBodies;
+﻿using PSP.Models.DTOs;
+using PSP.Models.Entities;
 using PSP.Repositories;
 
 namespace PSP.Services
 {
-    public class CancellationService : BaseService<Cancellation, CancellationCreate>
+    public class CancellationService : CrudEntityService<Cancellation, CancellationCreate>
     {
         public CancellationService(IBaseRepository<Cancellation> repository) : base(repository)
         { }

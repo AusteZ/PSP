@@ -1,39 +1,39 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PSP.Models;
-using PSP.Models.RequestBodies;
+﻿using PSP.Models.DTOs;
+using PSP.Models.Entities;
+using PSP.Models.Exceptions;
 using PSP.Repositories;
 using PSP.Services.Interfaces;
 
 namespace PSP.Services
 {
-    public class ServiceSlotsService : BaseService<ServiceSlot, ServiceSlotCreate>, IServiceSlotsService
+    public class ServiceSlotsService : CrudEntityService<ServiceSlot, ServiceSlotCreate>, IServiceSlotsService
     {
-        private readonly IBaseService<Cancellation, CancellationCreate> _cancellationService;
-        private readonly IBaseService<Service, ServiceCreate> _servicesService;
+        private readonly ICrudEntityService<Cancellation, CancellationCreate> _cancellationEntityService;
+        private readonly ICrudEntityService<Service, ServiceCreate> _entityServicesEntityService;
 
         public ServiceSlotsService(IBaseRepository<ServiceSlot> repository,
-            IBaseService<Cancellation, CancellationCreate> cancellationService,
-            IBaseService<Service, ServiceCreate> servicesService) : base(repository)
+            ICrudEntityService<Cancellation, CancellationCreate> cancellationEntityService,
+            ICrudEntityService<Service, ServiceCreate> entityServicesEntityService) : base(repository)
         {
-            _cancellationService = cancellationService;
-            _servicesService = servicesService;
+            _cancellationEntityService = cancellationEntityService;
+            _entityServicesEntityService = entityServicesEntityService;
         }
 
         public override ServiceSlot Add(ServiceSlotCreate entity)
         {
-            _servicesService.Get(entity.ServiceId);
+            _entityServicesEntityService.Get(entity.ServiceId);
             return base.Add(entity);
         }
 
         public override ServiceSlot Update(ServiceSlotCreate creationModel, int id)
         {
-            _servicesService.Get(creationModel.ServiceId);
+            _entityServicesEntityService.Get(creationModel.ServiceId);
             return base.Update(creationModel, id);
         }
 
         public override ServiceSlot Update(ServiceSlot entity)
         {
-            _servicesService.Get(entity.ServiceId);
+            _entityServicesEntityService.Get(entity.ServiceId);
             return base.Update(entity);
         }
 
@@ -61,7 +61,7 @@ namespace PSP.Services
             slot.CustomerId = null;
             slot.PartySize = null;
 
-            _cancellationService.Add(cancellation);
+            _cancellationEntityService.Add(cancellation);
             base.Update(slot);
         }
 

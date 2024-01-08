@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using PSP.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using PSP.Models.Entities;
 
 namespace PSP.Controllers
 {

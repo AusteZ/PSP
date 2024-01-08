@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace PSP.Models
+﻿namespace PSP.Models.DTOs
 {
     public class ServiceSlotBooking
     {

@@ -1,4 +1,4 @@
-﻿namespace PSP.Models.RequestBodies
+﻿namespace PSP.Models.DTOs
 {
     public class CancellationCreate
     {

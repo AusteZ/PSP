@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace PSP.Models
+namespace PSP.Models.Entities
 {
     public class Order
     {

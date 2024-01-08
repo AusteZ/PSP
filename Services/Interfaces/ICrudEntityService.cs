@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PSP.Services
+namespace PSP.Services.Interfaces
 {
-    public interface IBaseService<T, TCreate> where T : class where TCreate : class
+    public interface ICrudEntityService<T, TCreate> where T : class where TCreate : class
     {
         IEnumerable<T> GetAll();
         T Get(int id);

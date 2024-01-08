@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PSP.Models;
-using PSP.Models.RequestBodies;
-using PSP.Services;
+using PSP.Models.DTOs;
+using PSP.Models.Entities;
 using PSP.Services.Interfaces;
 
 namespace PSP.Controllers
@@ -12,13 +11,13 @@ namespace PSP.Controllers
     {
         private readonly PSPDatabaseContext _db;
         private readonly IServiceSlotsService _service;
-        private readonly IBaseService<Cancellation, CancellationCreate> _cancellationService;
+        private readonly ICrudEntityService<Cancellation, CancellationCreate> _cancellationEntityService;
 
-        public ServiceSlotsController(PSPDatabaseContext db, IServiceSlotsService service, IBaseService<Cancellation, CancellationCreate> cancellationService)
+        public ServiceSlotsController(PSPDatabaseContext db, IServiceSlotsService service, ICrudEntityService<Cancellation, CancellationCreate> cancellationEntityService)
         {
             _db = db;
             _service = service;
-            _cancellationService = cancellationService;
+            _cancellationEntityService = cancellationEntityService;
         }
 
         [HttpGet]
@@ -50,7 +49,7 @@ namespace PSP.Controllers
         [HttpGet("cancellations")]
         public ActionResult GetCancellations()
         {
-            return Ok(_cancellationService.GetAll());
+            return Ok(_cancellationEntityService.GetAll());
         }
 
         [HttpPost("{id}/cancel")]

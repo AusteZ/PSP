@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
-namespace PSP.Models;
+namespace PSP.Models.Entities;
 
 public class PSPDatabaseContext : DbContext
 {

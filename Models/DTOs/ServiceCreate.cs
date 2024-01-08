@@ -1,4 +1,4 @@
-﻿namespace PSP.Models
+﻿namespace PSP.Models.DTOs
 {
     public class ServiceCreate
     {

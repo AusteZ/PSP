@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PSP.Models;
+using PSP.Models.Entities;
 
 namespace PSP.Repositories;
 public class BaseRepository<T> : IBaseRepository<T> where T : class
