@@ -8,32 +8,32 @@ namespace PSP.Services
 {
     public class ServiceSlotsService : CrudEntityService<ServiceSlot, ServiceSlotCreate>, IServiceSlotsService
     {
-        private readonly ICrudEntityService<Cancellation, CancellationCreate> _cancellationEntityService;
-        private readonly ICrudEntityService<Service, ServiceCreate> _entityServicesEntityService;
+        private readonly ICrudEntityService<Cancellation, CancellationCreate> _cancellationService;
+        private readonly ICrudEntityService<Service, ServiceCreate> _servicesService;
 
         public ServiceSlotsService(IBaseRepository<ServiceSlot> repository,
-            ICrudEntityService<Cancellation, CancellationCreate> cancellationEntityService,
-            ICrudEntityService<Service, ServiceCreate> entityServicesEntityService) : base(repository)
+            ICrudEntityService<Cancellation, CancellationCreate> cancellationService,
+            ICrudEntityService<Service, ServiceCreate> servicesService) : base(repository)
         {
-            _cancellationEntityService = cancellationEntityService;
-            _entityServicesEntityService = entityServicesEntityService;
+            _cancellationService = cancellationService;
+            _servicesService = servicesService;
         }
 
         public override ServiceSlot Add(ServiceSlotCreate entity)
         {
-            _entityServicesEntityService.Get(entity.ServiceId);
+            _servicesService.Get(entity.ServiceId);
             return base.Add(entity);
         }
 
         public override ServiceSlot Update(ServiceSlotCreate creationModel, int id)
         {
-            _entityServicesEntityService.Get(creationModel.ServiceId);
+            _servicesService.Get(creationModel.ServiceId);
             return base.Update(creationModel, id);
         }
 
         public override ServiceSlot Update(ServiceSlot entity)
         {
-            _entityServicesEntityService.Get(entity.ServiceId);
+            _servicesService.Get(entity.ServiceId);
             return base.Update(entity);
         }
 
@@ -61,7 +61,7 @@ namespace PSP.Services
             slot.CustomerId = null;
             slot.PartySize = null;
 
-            _cancellationEntityService.Add(cancellation);
+            _cancellationService.Add(cancellation);
             base.Update(slot);
         }
 
