@@ -1,4 +1,6 @@
-﻿using PSP.Models.DTOs;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
+using PSP.Models.DTOs;
 using PSP.Models.Entities;
 using PSP.Models.Exceptions;
 using PSP.Repositories;
@@ -61,6 +63,14 @@ namespace PSP.Services
         {
             var entity = Get(id);
             _repository.Remove(entity);
+        }
+
+        public virtual T Patch(JsonPatchDocument<T> patchDocument, int id)
+        {
+            var entity = Get(id);
+            patchDocument.ApplyTo(entity);
+            _repository.Update(entity);
+            return entity;
         }
 
         protected void CheckFor404(T? entity, int id)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using System;
 using System.Collections.Generic;
 
 namespace PSP.Services.Interfaces
@@ -10,6 +11,7 @@ namespace PSP.Services.Interfaces
         T Add(TCreate entity);
         T Update(TCreate creationModel, int id);
         T Update(T entity);
+        T Patch(JsonPatchDocument<T> patchDocument, int id);
         void Delete(int id);
     }
 }

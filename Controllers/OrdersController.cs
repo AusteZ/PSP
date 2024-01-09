@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
+using PSP.Models.DTOs;
 using PSP.Models.Entities;
+using PSP.Services;
+using PSP.Services.Interfaces;
 
 namespace PSP.Controllers
 {
@@ -7,67 +11,52 @@ namespace PSP.Controllers
     [Route("[controller]")]
     public class OrdersController : Controller
     {
-        private readonly PSPDatabaseContext _db;
-
-        public OrdersController(PSPDatabaseContext db) 
+        private readonly ICrudEntityService<Order, OrderCreate> _service;
+        public OrdersController(ICrudEntityService<Order, OrderCreate> service) 
         {
-            _db = db;
+            _service = service;
         }
 
-        // GET: Orders/:id
+        [HttpGet]
+        public ActionResult GetAll()
+        {
+            return Ok(_service.GetAll());
+        }
+
+        // GET: orders/:id
         [HttpGet("{id}")]
         public ActionResult Index(int id)
         {
-            Order? order = _db.Orders.Find(id);
-
-            if (order != null) 
-            {
-                return Ok(order);
-            }
-            else
-            {
-                return StatusCode(404);
-            }
+            return Ok(_service.Get(id));
         }
 
-        // POST: Orders
+        // POST: orders
         [HttpPost]
-        public ActionResult Post(IFormCollection requestParams)
+        public ActionResult Post([FromBody] OrderCreate body)
         {
-            try
-            {
-                Order order = new Order();
-                order.PaymentStatus = requestParams["paymentStatus"];
-
-                _db.Orders.Add(order);
-                _db.SaveChanges();
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            return Ok(_service.Add(body));
         }
 
-        // PUT: Orders/:id
+        // PUT: orders/:orderID
         [HttpPut("{id}")]
-        public ActionResult Put(int id, IFormCollection collection)
+        public ActionResult Put(int id, [FromBody] OrderCreate body)
         {
-            try
-            {
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            return Ok(_service.Update(body, id));
         }
 
-        // DELETE: Orders/:id
+        // DELETE: orders/:orderID
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            return Ok();
+            _service.Delete(id);
+            return NoContent();
+        }
+
+        // PATCH: orders/:orderID
+        [HttpPatch("{id}")]
+        public ActionResult Patch(int id, [FromBody] JsonPatchDocument<Order> orderDocument)
+        {
+            return Ok(_service.Patch(orderDocument, id));
         }
     }
 }
