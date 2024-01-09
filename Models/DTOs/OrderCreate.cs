@@ -8,8 +8,8 @@ namespace PSP.Models.DTOs
         public OrderStatus Status { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public ICollection<OrderProductsCreate>? OrderProducts { get; set; }
-        public ICollection<OrderServicesCreate>? OrderServices { get; set; }
+        public List<OrderProductsCreate>? OrderProducts { get; set; }
+        public List<OrderServicesCreate>? OrderServices { get; set; }
 
     }
 }

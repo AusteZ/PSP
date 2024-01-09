@@ -31,20 +31,28 @@ namespace PSP.Services
                 EndDate = entity.EndDate,
             };
 
-            // Handle OrderProducts
+            return order;
+        }
+
+        public override Order Add(OrderCreate entity)
+        {
+            var order = base.Add(entity);
             if (entity.OrderProducts != null)
             {
                 foreach (var op in entity.OrderProducts)
                 {
+                    op.OrderId = order.Id;
+                    op.Order = order;
                     _orderProductsService.Add(op);
                 }
             }
-
             // Handle OrderServices
             if (entity.OrderServices != null)
             {
                 foreach (var os in entity.OrderServices)
                 {
+                    os.OrderId = order.Id;
+                    os.Order = order;
                     _orderServicesService.Add(os);
                 }
             }

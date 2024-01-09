@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PSP.Models.Entities
 {
@@ -12,5 +13,9 @@ namespace PSP.Models.Entities
         public string ServiceDescription { get; set; }
         public float EuroCost { get; set; }
         public int MinutesLength { get; set; }
+        [JsonIgnore]
+        public List<Order>? Orders { get; set; }
+        [JsonIgnore]
+        public List<OrderServices>? OrderServices { get; set; }
     }
 }

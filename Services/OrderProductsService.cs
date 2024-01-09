@@ -15,8 +15,10 @@ namespace PSP.Services
         {
             return new OrderProducts()
             {
-                OrderId = id,
+                OrderId = entity.OrderId,
+                Order  = entity.Order,
                 ProductId = entity.ProductId,
+                Product = entity.Product,
                 Quantity = entity.Quantity,
             };
         }

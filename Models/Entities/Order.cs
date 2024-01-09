@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Azure;
 
 namespace PSP.Models.Entities
 {
@@ -22,8 +23,9 @@ namespace PSP.Models.Entities
 
         public DateTime EndDate { get; set; }
 
-        public virtual ICollection<OrderProducts>? OrderProducts { get; set; }
-
-        public virtual ICollection<OrderServices>? OrderServices { get; set; }
+        public List<Product>? Products { get; set; }
+        public List<OrderProducts>? OrderProducts { get; set; } 
+        public List<Service>? Services { get; set; }
+        public List<OrderServices>? OrderServices { get; set;  }
     }
 }

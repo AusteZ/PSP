@@ -1,18 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PSP.Models.Entities
 {
     public class OrderServices
     {
-
-        [ForeignKey(nameof(Order))]
+        [JsonIgnore]
         public int OrderId { get; set; }
-
+        [JsonIgnore]
         public Order? Order { get; set; }
-
-        [ForeignKey(nameof(Service))]
         public int ServiceId { get; set; }
+        [JsonIgnore]
         public Service? Service { get; set; }
 
     }
