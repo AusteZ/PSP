@@ -2,18 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
 using PSP.Models.Entities;
+using PSP.Services;
 using PSP.Services.Interfaces;
 
 namespace PSP.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ServicesController : Controller
+    public class ProductsController : Controller
     {
-        private readonly ICrudEntityService<Service, ServiceCreate> _service;
+        private readonly ICrudEntityService<Product, ProductCreate> _service;
         private readonly IMapper _mapper;
 
-        public ServicesController(ICrudEntityService<Service, ServiceCreate> service, IMapper mapper)
+        public ProductsController(ICrudEntityService<Product, ProductCreate> service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -22,25 +23,25 @@ namespace PSP.Controllers
         [HttpGet]
         public ActionResult GetAll()
         {
-            return Ok(_mapper.Map<IEnumerable<ServiceOutput>>(_service.GetAll()));
+            return Ok(_mapper.Map<IEnumerable<ProductOutput>>(_service.GetAll()));
         }
 
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return Ok(_mapper.Map<ServiceOutput>(_service.Get(id)));
+            return Ok(_mapper.Map<ProductOutput>(_service.Get(id)));
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] ServiceCreate body)
+        public ActionResult Post([FromBody] ProductCreate body)
         {
-            return Ok(_mapper.Map<ServiceOutput>(_service.Add(body)));
+            return Ok(_mapper.Map<ProductOutput>(_service.Add(body)));
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody]ServiceCreate body)
+        public ActionResult Put(int id, [FromBody] ProductCreate body)
         {
-            return Ok(_mapper.Map<ServiceOutput>(_service.Update(body, id)));
+            return Ok(_mapper.Map<ProductOutput>(_service.Update(body, id)));
         }
 
         [HttpDelete("{id}")]

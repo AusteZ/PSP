@@ -1,4 +1,5 @@
-﻿using PSP.Models.DTOs;
+﻿using AutoMapper;
+using PSP.Models.DTOs;
 using PSP.Models.Entities;
 using PSP.Models.Exceptions;
 using PSP.Repositories;
@@ -13,7 +14,7 @@ namespace PSP.Services
 
         public ServiceSlotsService(IBaseRepository<ServiceSlot> repository,
             ICrudEntityService<Cancellation, CancellationCreate> cancellationService,
-            ICrudEntityService<Service, ServiceCreate> servicesService) : base(repository)
+            ICrudEntityService<Service, ServiceCreate> servicesService, IMapper mapper) : base(repository, mapper)
         {
             _cancellationService = cancellationService;
             _servicesService = servicesService;
@@ -21,20 +22,16 @@ namespace PSP.Services
 
         public override ServiceSlot Add(ServiceSlotCreate entity)
         {
-            _servicesService.Get(entity.ServiceId);
-            return base.Add(entity);
+            var addedEntity = base.Add(entity);
+            var parentService = _servicesService.Get(entity.ServiceId);
+            parentService.ServiceSlots.Add(addedEntity);
+            return addedEntity;
         }
 
         public override ServiceSlot Update(ServiceSlotCreate creationModel, int id)
         {
-            _servicesService.Get(creationModel.ServiceId);
+            _servicesService.CheckFor404(creationModel.ServiceId);
             return base.Update(creationModel, id);
-        }
-
-        public override ServiceSlot Update(ServiceSlot entity)
-        {
-            _servicesService.Get(entity.ServiceId);
-            return base.Update(entity);
         }
 
         public void Book(int id, ServiceSlotBooking booking)
@@ -81,16 +78,10 @@ namespace PSP.Services
 
         protected override ServiceSlot ModelToEntity(ServiceSlotCreate entity, int id = 0)
         {
-            return new ServiceSlot()
-            {
-                Id = id,
-                ServiceId = entity.ServiceId,
-                CustomerId = entity.CustomerId,
-                PartySize = entity.PartySize,
-                Time = entity.Time,
-                EmployeeId = entity.EmployeeId,
-                Completed = entity.Completed,
-            };
+            var serviceSlot = _mapper.Map<ServiceSlot>(entity);
+            serviceSlot.Id = id;
+            serviceSlot.Service = _servicesService.Get(entity.ServiceId);
+            return serviceSlot;
         }
     }
 }

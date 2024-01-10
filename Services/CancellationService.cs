@@ -1,4 +1,5 @@
-﻿using PSP.Models.DTOs;
+﻿using AutoMapper;
+using PSP.Models.DTOs;
 using PSP.Models.Entities;
 using PSP.Repositories;
 
@@ -6,18 +7,15 @@ namespace PSP.Services
 {
     public class CancellationService : CrudEntityService<Cancellation, CancellationCreate>
     {
-        public CancellationService(IBaseRepository<Cancellation> repository) : base(repository)
-        { }
+        public CancellationService(IBaseRepository<Cancellation> repository, IMapper mapper) : base(repository, mapper)
+        {
+        }
 
         protected override Cancellation ModelToEntity(CancellationCreate entity, int id = 0)
         {
-            return new Cancellation()
-            {
-                Id = id,
-                CancellationTime = entity.CancellationTime,
-                ServiceSlotId = entity.ServiceSlotId,
-                CustomerId = entity.CustomerId
-            };
+             var cancellation = _mapper.Map<Cancellation>(entity);
+             cancellation.Id = id;
+             return cancellation;
         }
     }
 }

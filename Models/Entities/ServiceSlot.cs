@@ -9,10 +9,12 @@ namespace PSP.Models.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int ServiceId { get; set; }
+        public Service Service { get; set; }
         public int EmployeeId { get; set; }
         public DateTime Time { get; set; }
         public int? CustomerId { get; set; }
         public int? PartySize { get; set; }
         public bool Completed { get; set; }
+        public IList<OrderService> Orders { get; set; } = new List<OrderService>();
     }
 }

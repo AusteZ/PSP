@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
 using PSP.Models.Entities;
 using PSP.Services.Interfaces;
@@ -9,34 +10,33 @@ namespace PSP.Controllers
     [Route("[controller]")]
     public class ServiceSlotsController : Controller
     {
-        private readonly PSPDatabaseContext _db;
         private readonly IServiceSlotsService _service;
         private readonly ICrudEntityService<Cancellation, CancellationCreate> _cancellationEntityService;
+        private readonly IMapper _mapper;
 
-        public ServiceSlotsController(PSPDatabaseContext db, IServiceSlotsService service, ICrudEntityService<Cancellation, CancellationCreate> cancellationEntityService)
+        public ServiceSlotsController(IServiceSlotsService service, ICrudEntityService<Cancellation, CancellationCreate> cancellationEntityService, IMapper mapper)
         {
-            _db = db;
             _service = service;
             _cancellationEntityService = cancellationEntityService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public ActionResult GetAll([FromQuery] int? employeeIdFilter, [FromQuery] int? serviceIdFilter, [FromQuery] bool? isFree)
         {
-            return Ok(_service.GetFiltered(employeeIdFilter, serviceIdFilter, isFree));
+            return Ok(_mapper.Map<IEnumerable<ServiceSlotOutput>>(_service.GetFiltered(employeeIdFilter, serviceIdFilter, isFree)));
         }
 
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return Ok(_service.Get(id));
+            return Ok(_mapper.Map<ServiceSlotOutput>(_service.Get(id)));
         }
 
         [HttpPost]
         public ActionResult Post([FromBody] ServiceSlotCreate body)
         {
-            _service.Add(body);
-            return Ok();
+            return Ok(_mapper.Map<ServiceSlotOutput>(_service.Add(body)));
         }
 
         [HttpPost("{id}/book")]
@@ -62,8 +62,7 @@ namespace PSP.Controllers
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] ServiceSlotCreate body)
         {
-            _service.Update(body, id);
-            return Ok();
+            return Ok(_mapper.Map<ServiceSlotOutput>(_service.Update(body, id)));
         }
 
         [HttpDelete("{id}")]
