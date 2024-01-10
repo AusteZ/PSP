@@ -12,5 +12,6 @@ namespace PSP.Models.Entities
         public string ServiceDescription { get; set; }
         public float EuroCost { get; set; }
         public int MinutesLength { get; set; }
+        public IList<ServiceSlot> ServiceSlots { get; set; } = new List<ServiceSlot>();
     }
 }

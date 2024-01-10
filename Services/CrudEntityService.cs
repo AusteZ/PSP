@@ -1,4 +1,5 @@
-﻿using PSP.Models.DTOs;
+﻿using AutoMapper;
+using PSP.Models.DTOs;
 using PSP.Models.Entities;
 using PSP.Models.Exceptions;
 using PSP.Repositories;
@@ -9,10 +10,12 @@ namespace PSP.Services
     public abstract class CrudEntityService<T, TCreate> : ICrudEntityService<T, TCreate> where T : class where TCreate : class
     {
         protected readonly IBaseRepository<T> _repository;
+        protected readonly IMapper _mapper;
 
-        protected CrudEntityService(IBaseRepository<T> repository)
+        protected CrudEntityService(IBaseRepository<T> repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public virtual IEnumerable<T> GetAll()
@@ -43,12 +46,10 @@ namespace PSP.Services
 
         public virtual T Update(TCreate creationModel, int id)
         {
-            // Check if item exists
-            Get(id);
-
-            var entity = ModelToEntity(creationModel, id);
-            _repository.Update(entity);
-            return entity;
+            var entity = Get(id);
+            var newEntity = ModelToEntity(creationModel, id);
+            _repository.Update(entity, newEntity);
+            return newEntity;
         }
 
         public virtual T Update(T entity)
@@ -60,12 +61,17 @@ namespace PSP.Services
         public virtual void Delete(int id)
         {
             var entity = Get(id);
+            CheckFor404(entity, id);
             _repository.Remove(entity);
         }
 
-        protected void CheckFor404(T? entity, int id)
+        public void CheckFor404(int id) => CheckFor404(_repository.Find(id), id);
+
+        public void CheckFor404(T? entity, int id) => CheckFor404(entity != null, id);
+
+        private void CheckFor404(bool exists, int id)
         {
-            if (entity == null)
+            if (!exists)
                 throw new UserFriendlyException($"Entity of type '{typeof(T).Name}' with id '{id}' was not found.", 404);
         }
     }

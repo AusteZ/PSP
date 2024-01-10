@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PSP.Models.Entities
 {
-    public class Cancellation
+    public class Customer
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int ServiceSlotId { get; set; }
-        public DateTime CancellationTime { get; set; }
-        public int OrderId { get; set; }
+        public string Userame { get; set; }
+        public string Password { get; set; }
+        public IList<Order> Orders { get; set; }
     }
 }
