@@ -12,12 +12,12 @@ namespace PSP.Services
     {
         private readonly IBaseRepository<OrderProduct> _orderProductsRepository;
         private readonly IServiceSlotsService _serviceSlotsService;
-        private readonly ICrudEntityService<Product, ProductCreate> _productsService;
+        private readonly IProductsService _productsService;
 
         public OrdersService(IBaseRepository<Order> repository,
             IBaseRepository<OrderProduct> orderProductsRepository,
             IServiceSlotsService servicesSlotsService,
-            ICrudEntityService<Product, ProductCreate> productsService,
+            IProductsService productsService,
             IMapper mapper)
             : base(repository, mapper)
         {
@@ -41,9 +41,10 @@ namespace PSP.Services
             var order = base.Update(entity, id);
 
             RemoveServices(oldServices.Select(x => x.ServiceId).Except(entity.serviceSlotIds));
-            RemoveProducts(oldProducts.Select(x => x.ProductId).Except(entity.ProductsIds), oldEntity.Id);
             AddServices(entity.serviceSlotIds.Except(oldServices.Select(x => x.ServiceId)), order);
-            AddProducts(entity.ProductsIds.Except(oldProducts.Select(x => x.ProductId)), order);
+
+            RemoveProducts(oldProducts.Select(x => x.ProductId), oldEntity.Id);
+            AddProducts(entity.ProductsIds, order);
             return Get(order.Id); ;
         }
 
@@ -57,15 +58,11 @@ namespace PSP.Services
 
         private void AddProducts(IEnumerable<int> products, Order order)
         {
-            foreach (var productId in products)
+            var productsList = products.ToList();
+            for (var i = 0; i < productsList.Count;)
             {
-                var orderService = new OrderProduct()
-                {
-                    OrderId = order.Id,
-                    ProductId = productId,
-                    Product = _productsService.Get(productId),
-                };
-                _orderProductsRepository.Add(orderService);
+                _productsService.AddToOrder(productsList[i], order.Id, productsList.Count(x => x == productsList[i]));
+                productsList.RemoveAll(x => x == productsList[i]);
             }
         }
 
@@ -81,9 +78,7 @@ namespace PSP.Services
         {
             foreach (var product in products)
             {
-                var connectingTable = _orderProductsRepository.Find(product, orderId);
-                if (connectingTable != null)
-                    _orderProductsRepository.Remove(connectingTable);
+                _productsService.RemoveFromOrder(product, orderId);
             }
         }
 

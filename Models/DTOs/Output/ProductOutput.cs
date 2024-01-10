@@ -18,4 +18,10 @@ namespace PSP.Models.DTOs
         public float PriceEuros { get; set; }
         public string ProductDescription { get; set; }
     }
+
+    public class ProductWithQuantity
+    {
+        public ProductWithNoRelations Product { get; set; }
+        public int Quantity { get; set; }
+    }
 }

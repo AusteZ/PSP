@@ -12,10 +12,10 @@ namespace PSP.Controllers
     [Route("[controller]")]
     public class ProductsController : Controller
     {
-        private readonly ICrudEntityService<Product, ProductCreate> _service;
+        private readonly IProductsService _service;
         private readonly IMapper _mapper;
 
-        public ProductsController(ICrudEntityService<Product, ProductCreate> service, IMapper mapper)
+        public ProductsController(IProductsService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -50,6 +50,20 @@ namespace PSP.Controllers
         {
             _service.Delete(id);
             return NoContent();
+        }
+
+        [HttpPost("{id}/addToOrder")]
+        public ActionResult AddToOrder(int id, [FromQuery] int orderId, [FromQuery] int quantity = 1)
+        {
+            _service.AddToOrder(id, orderId, quantity);
+            return Ok();
+        }
+
+        [HttpPost("{id}/removeFromOrder")]
+        public ActionResult RemoveFromOrder(int id, [FromQuery] int orderId, [FromQuery] int quantity = 1)
+        {
+            _service.RemoveFromOrder(id, orderId, quantity);
+            return Ok();
         }
     }
 }

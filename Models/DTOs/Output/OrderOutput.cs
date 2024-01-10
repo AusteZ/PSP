@@ -13,7 +13,7 @@ namespace PSP.Models.DTOs.Output
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public IList<ServiceSlotWithServiceOutput> ServiceSlots { get; set; }
-        public IList<ProductWithNoRelations> Products { get; set; }
+        public IList<ProductWithQuantity> Products { get; set; }
     }
 
     public class OrderWithNoRelations
