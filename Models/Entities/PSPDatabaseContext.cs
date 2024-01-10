@@ -12,6 +12,15 @@ public class PSPDatabaseContext : DbContext
         Database.EnsureCreated();
     }
 
+    public DbSet<Order> Orders { get; set; } = null!;
+    public DbSet<Service> Services { get; set; } = null!;
+    public DbSet<ServiceSlot> ServiceSlots { get; set; } = null!;
+    public DbSet<Cancellation> Cancellations { get; set; } = null!;
+    public DbSet<Product> Products { get; set; } = null!;
+    public DbSet<Customer> Customers { get; set; } = null!;
+    public DbSet<OrderProduct> OrderProducts { get; set; } = null!;
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -24,19 +33,7 @@ public class PSPDatabaseContext : DbContext
                 Password = "123"
             }
         );
-    }
 
-    public DbSet<Order> Orders { get; set; } = null!;
-    public DbSet<Service> Services { get; set; } = null!;
-    public DbSet<ServiceSlot> ServiceSlots { get; set; } = null!;
-    public DbSet<Cancellation> Cancellations { get; set; } = null!;
-    public DbSet<Product> Products { get; set; } = null!;
-    public DbSet<Customer> Customers { get; set; } = null!;
-    public DbSet<OrderProduct> OrderProducts { get; set; } = null!;
-
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
         modelBuilder.Entity<Service>()
             .HasMany(p => p.ServiceSlots)
             .WithOne(d => d.Service)
