@@ -29,7 +29,7 @@ public class MappingProfile : Profile
         CreateMap<OrderProduct, ProductWithQuantity>();
 
         CreateMap<Order, OrderOutput>()
-            .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products.Select(op => op.Product)));
+            .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products));
         CreateMap<OrderCreate, Order>();
         CreateMap<Order, OrderWithNoRelations>();
 
