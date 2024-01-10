@@ -15,9 +15,11 @@ namespace PSP.Models.Entities
         public PaymentStatus Status { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public Receipt? Receipt { get; set; }
         public IList<OrderProduct> Products { get; set; } = new List<OrderProduct>();
         public IList<ServiceSlot> ServiceSlots { get; set; } = new List<ServiceSlot>();
     }
+
     public enum PaymentStatus 
     {
         pending,

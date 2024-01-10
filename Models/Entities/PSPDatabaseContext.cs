@@ -46,5 +46,10 @@ public class PSPDatabaseContext : DbContext
 
         modelBuilder.Entity<Receipt>()
             .HasKey(op => new { op.OrderId });
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.Receipt)
+            .WithOne(re => re.Order)
+            .HasForeignKey<Receipt>(re => re.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

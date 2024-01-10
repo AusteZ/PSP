@@ -26,7 +26,7 @@ namespace PSP.Services
 
         public ReceiptOutput PayWithCard(OrderOutput order, CardPayment card, float tip )
         {
-            if (!new CreditCardAttribute().IsValid(card.CardNumber))
+            if (new CreditCardAttribute().IsValid(card.CardNumber))
                 throw new UserFriendlyException("The card number is not valid", 400);
             if (new Regex(@"^[0-9]{3,4}$").IsMatch(card.CVC))
                 throw new UserFriendlyException("The card CVC is not valid", 400);
@@ -38,14 +38,17 @@ namespace PSP.Services
 
             return SaveReceipt(order, PaymentType.card, tip);
         }
+
         public ReceiptOutput PayWithCash(OrderOutput order, float tip)
         {
             return SaveReceipt(order, PaymentType.cash, tip);
         }
+
         private void ProcessPayment()
         {
             //To connect some payment gateway
         }
+
         private ReceiptOutput SaveReceipt(OrderOutput order, PaymentType type, float tip)
         {
             order.Status = PaymentStatus.completed;
@@ -66,12 +69,16 @@ namespace PSP.Services
 
             return receiptOutput;
         }
+
         public IEnumerable<Receipt> GetAll()
         {
             return _receiptRepository.FindAll();
         }
+
         public Receipt Get(int id)
         {
+            if (_orderService.Get(id).Status != PaymentStatus.completed)
+                throw new UserFriendlyException($"Order with '{id}' is not completed.", 400);
             var entity = _receiptRepository.Find(id);
             if(entity == null)
                 throw new UserFriendlyException($"Entity of type 'Receipt' with order id '{id}' was not found.", 404);

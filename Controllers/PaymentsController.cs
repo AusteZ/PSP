@@ -23,27 +23,29 @@ namespace PSP.Controllers
             _orderService = orderService;
             _mapper = mapper;
         }
+
         [HttpPost("card")]
         public ActionResult PayWithCard(int orderId, float tip, [FromBody] CardPayment card)
         {
             return Ok(_service.PayWithCard(_mapper.Map<OrderOutput>(_orderService.Get(orderId)), card, tip));
         }
+
         [HttpPost("cash")]
         public ActionResult PayWithCash(int orderId, float tip)
         {
             return Ok(_service.PayWithCash(_mapper.Map<OrderOutput>(_orderService.Get(orderId)), tip));
         }
+
         [HttpGet("Receipt/{orderId}")]
         public ActionResult GetOrderReceipt(int orderId)
         {
-            if (_orderService.Get(orderId).Status == PaymentStatus.completed)
-                return Ok(_service.Get(orderId));
-            return BadRequest();
+            return Ok(_mapper.Map<ReceiptOutput>(_service.Get(orderId)));
         }
+
         [HttpGet("Receipt")]
         public ActionResult GetAllOrderReceipts()
         {
-            return Ok(_service.GetAll());
+            return Ok(_mapper.Map<IEnumerable<ReceiptOutput>>(_service.GetAll()));
         }
     }
 }
