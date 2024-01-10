@@ -2,6 +2,7 @@
 using PSP.Models.DTOs;
 using PSP.Models.DTOs.Output;
 using PSP.Models.Entities;
+using PSP.Models.Entities.RelationalTables;
 
 namespace PSP.Models;
 public class MappingProfile : Profile
@@ -19,12 +20,14 @@ public class MappingProfile : Profile
 
         CreateMap<CancellationCreate, Cancellation>();
 
-        CreateMap<Product, ProductOutput>().ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders.Select(op => op.Order))); ;
+        CreateMap<Product, ProductOutput>().ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders.Select(op => op.Order)));
         CreateMap<ProductCreate, Product>();
 
         CreateMap<Product, ProductWithNoRelations>();
         CreateMap<Order, OrderOutput>().ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products.Select(op => op.Product)));
         CreateMap<OrderCreate, Order>();
+        CreateMap<OrderOutput, OrderCreate>().ForMember(dest => dest.serviceSlotIds, opt => opt.MapFrom(src => src.ServiceSlots.Select(op => op.Id))).ForMember(dest => dest.ProductsIds, opt => opt.MapFrom(src => src.Products.Select(op => op.Id)));
         CreateMap<Order, OrderWithNoRelations>();
+        CreateMap<Receipt, ReceiptOutput>();
     }
 }

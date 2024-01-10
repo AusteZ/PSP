@@ -17,6 +17,7 @@ public class PSPDatabaseContext : DbContext
     public DbSet<Product> Products { get; set; } = null!;
     public DbSet<Customer> Customers { get; set; } = null!;
     public DbSet<OrderProduct> OrderProducts { get; set; } = null!;
+    public DbSet<Receipt> Receipts { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,5 +43,8 @@ public class PSPDatabaseContext : DbContext
             .HasOne(ss => ss.Order)
             .WithMany(o => o.ServiceSlots)
             .HasForeignKey(ss => ss.OrderId);
+
+        modelBuilder.Entity<Receipt>()
+            .HasKey(op => new { op.OrderId });
     }
 }
