@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using PSP;
 using PSP.Models;
 using PSP.Models.DTOs;
@@ -16,6 +19,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PSPDatabaseContext>(opt =>
     opt.UseInMemoryDatabase("PSP"));
 
+// Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new MappingProfile());
@@ -24,6 +41,7 @@ var mapperConfig = new MapperConfiguration(mc =>
 var mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
+// Repositories
 builder.Services.AddScoped<IBaseRepository<Service>, ServicesRepository>();
 builder.Services.AddScoped<IBaseRepository<ServiceSlot>, ServiceSlotsRepository>();
 builder.Services.AddScoped<IBaseRepository<Cancellation>, CancellationRepository>();
@@ -31,10 +49,13 @@ builder.Services.AddScoped<IBaseRepository<Product>, ProductsRepository>();
 builder.Services.AddScoped<IBaseRepository<Order>, OrdersRepository>();
 builder.Services.AddScoped<IBaseRepository<OrderProduct>, OrderProductsRepository>();
 builder.Services.AddScoped<IBaseRepository<Receipt>, ReceiptRepository>();
+builder.Services.AddScoped<IBaseRepository<Customer>, CustomersRepository>();
 
+// Services
 builder.Services.AddScoped<ICrudEntityService<Service, ServiceCreate>, ServicesService>();
 builder.Services.AddScoped<IServiceSlotsService, ServiceSlotsService>();
 builder.Services.AddScoped<ICrudEntityService<Cancellation, CancellationCreate>, CancellationService>();
+builder.Services.AddScoped<ICustomersService, CustomersService>();
 builder.Services.AddScoped<ICrudEntityService<Order, OrderCreate>, OrdersService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IPaymentService, PaymentsService>();
@@ -57,6 +78,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
