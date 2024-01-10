@@ -10,12 +10,12 @@ namespace PSP.Repositories
 
         public override Product? Find(params int[] ids)
         {
-            return _dbSet.Include(e => e.Orders).ThenInclude(e => e.Order).FirstOrDefault(e => e.Id == ids[0]);
+            return _dbSet.Include(e => e.Orders).ThenInclude(e => e.Order).Include(e => e.Discounts).ThenInclude(e => e.Discount).FirstOrDefault(e => e.Id == ids[0]);
         }
 
         public override IEnumerable<Product> FindAll()
         {
-            return _dbSet.Include(e => e.Orders).ThenInclude(e => e.Order).ToList();
+            return _dbSet.Include(e => e.Orders).ThenInclude(e => e.Order).Include(e => e.Discounts).ThenInclude(e => e.Discount).ToList();
         }
     }
 }

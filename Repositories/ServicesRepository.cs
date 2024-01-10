@@ -10,12 +10,12 @@ namespace PSP.Repositories
 
         public override Service? Find(params int[] ids)
         {
-            return _dbSet.Include(e => e.ServiceSlots).FirstOrDefault(e => e.Id == ids[0]);
+            return _dbSet.Include(e => e.ServiceSlots).Include(e => e.Discounts).ThenInclude(e => e.Discount).FirstOrDefault(e => e.Id == ids[0]);
         }
 
         public override IEnumerable<Service> FindAll()
         {
-            return _dbSet.Include(e => e.ServiceSlots).ToList();
+            return _dbSet.Include(e => e.ServiceSlots).Include(e => e.Discounts).ThenInclude(e => e.Discount).ToList();
         }
     }
 }

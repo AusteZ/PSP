@@ -35,7 +35,8 @@ namespace PSP.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] DiscountCreate body)
         {
-            return Ok(_mapper.Map<DiscountOutput>(_service.Add(body)));
+            var test = _mapper.Map<DiscountOutput>(_service.Add(body));
+            return Ok(test);
         }
 
         [HttpPut("{id}")]
