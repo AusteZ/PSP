@@ -12,6 +12,7 @@ namespace PSP.Models.DTOs.Output
         public string Status { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public float Tips { get; set; }
         public IList<ServiceSlotWithServiceOutput> ServiceSlots { get; set; }
         public IList<ProductWithQuantity> Products { get; set; }
     }
@@ -24,5 +25,6 @@ namespace PSP.Models.DTOs.Output
         public string Status { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public float Tips { get; set; }
     }
 }
