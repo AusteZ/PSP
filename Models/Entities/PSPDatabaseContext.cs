@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PSP.Services;
+using PSP.Models.Entities.RelationalTables;
 
 namespace PSP.Models.Entities;
 
@@ -17,7 +17,6 @@ public class PSPDatabaseContext : DbContext
     public DbSet<Product> Products { get; set; } = null!;
     public DbSet<Customer> Customers { get; set; } = null!;
     public DbSet<OrderProduct> OrderProducts { get; set; } = null!;
-    public DbSet<OrderService> OrderServices { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -39,15 +38,9 @@ public class PSPDatabaseContext : DbContext
             .WithMany(p => p.Products)
             .HasForeignKey(op => op.OrderId);
 
-        modelBuilder.Entity<OrderService>()
-            .HasKey(os => new { ServiceId = os.ServiceSlotId, os.OrderId });
-        modelBuilder.Entity<OrderService>()
-            .HasOne(os => os.ServiceSlot)
-            .WithMany(p => p.Orders)
-            .HasForeignKey(os => os.ServiceSlotId);
-        modelBuilder.Entity<OrderService>()
-            .HasOne(os => os.Order)
-            .WithMany(p => p.ServiceSlots)
-            .HasForeignKey(os => os.OrderId);
+        modelBuilder.Entity<ServiceSlot>()
+            .HasOne(ss => ss.Order)
+            .WithMany(o => o.ServiceSlots)
+            .HasForeignKey(ss => ss.OrderId);
     }
 }

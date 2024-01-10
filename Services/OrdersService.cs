@@ -2,6 +2,7 @@
 using PSP.Models;
 using PSP.Models.DTOs;
 using PSP.Models.Entities;
+using PSP.Models.Entities.RelationalTables;
 using PSP.Repositories;
 using PSP.Services.Interfaces;
 
@@ -10,35 +11,25 @@ namespace PSP.Services
     public class OrdersService : CrudEntityService<Order, OrderCreate>
     {
         private readonly IBaseRepository<OrderProduct> _orderProductsRepository;
-        private readonly IBaseRepository<OrderService> _orderServicesRepository;
         private readonly IServiceSlotsService _serviceSlotsService;
         private readonly ICrudEntityService<Product, ProductCreate> _productsService;
 
         public OrdersService(IBaseRepository<Order> repository,
             IBaseRepository<OrderProduct> orderProductsRepository,
-            IBaseRepository<OrderService> orderServicesRepository,
             IServiceSlotsService servicesSlotsService,
             ICrudEntityService<Product, ProductCreate> productsService,
             IMapper mapper)
             : base(repository, mapper)
         {
             _orderProductsRepository = orderProductsRepository;
-            _orderServicesRepository = orderServicesRepository;
             _serviceSlotsService = servicesSlotsService;
             _productsService = productsService;
         }
 
         protected override Order ModelToEntity(OrderCreate entity, int id = 0)
         {
-            var order = new Order
-            {
-                Id = id,
-                CustomerId = entity.CustomerId,
-                Status = entity.Status,
-                StartDate = entity.StartDate == default ? DateTime.Now : entity.StartDate,
-                EndDate = entity.EndDate,
-            };
-
+            var order = _mapper.Map<Order>(entity);
+            order.Id = id;
             return order;
         }
 
@@ -48,24 +39,25 @@ namespace PSP.Services
             var oldServices = oldEntity.ServiceSlots.ToList();
             var oldProducts = oldEntity.Products.ToList();
             var order = base.Update(entity, id);
-            RemoveServices(oldServices, oldEntity.Id);
-            RemoveProducts(oldProducts, oldEntity.Id);
-            AddServices(order, entity);
-            AddProducts(order, entity);
-            return order;
+
+            RemoveServices(oldServices.Select(x => x.ServiceId).Except(entity.serviceSlotIds));
+            RemoveProducts(oldProducts.Select(x => x.ProductId).Except(entity.ProductsIds), oldEntity.Id);
+            AddServices(entity.serviceSlotIds.Except(oldServices.Select(x => x.ServiceId)), order);
+            AddProducts(entity.ProductsIds.Except(oldProducts.Select(x => x.ProductId)), order);
+            return Get(order.Id); ;
         }
 
         public override Order Add(OrderCreate entity)
         {
             var order = base.Add(entity);
-            AddServices(order, entity);
-            AddProducts(order, entity);
+            AddServices(entity.serviceSlotIds, order);
+            AddProducts(entity.ProductsIds, order);
             return order;
         }
 
-        private void AddProducts(Order order, OrderCreate entity)
+        private void AddProducts(IEnumerable<int> products, Order order)
         {
-            foreach (var productId in entity.ProductsIds)
+            foreach (var productId in products)
             {
                 var orderService = new OrderProduct()
                 {
@@ -77,37 +69,29 @@ namespace PSP.Services
             }
         }
 
-        private void AddServices(Order order, OrderCreate entity)
+        private void AddServices(IEnumerable<int> services, Order order)
         {
-            foreach (var serviceId in entity.ServiceIds)
+            foreach (var serviceId in services)
             {
-                var orderService = new OrderService()
-                {
-                    OrderId = order.Id,
-                    ServiceSlotId = serviceId,
-                    ServiceSlot = _serviceSlotsService.Get(serviceId),
-                };
-                _orderServicesRepository.Add(orderService);
+                _serviceSlotsService.Book(serviceId, order.Id);
             }
         }
 
-        private void RemoveProducts(IList<OrderProduct> products, int orderId)
+        private void RemoveProducts(IEnumerable<int> products, int orderId)
         {
             foreach (var product in products)
             {
-                var connectingTable = _orderProductsRepository.Find(product.ProductId, orderId);
+                var connectingTable = _orderProductsRepository.Find(product, orderId);
                 if (connectingTable != null)
                     _orderProductsRepository.Remove(connectingTable);
             }
         }
 
-        private void RemoveServices(IList<OrderService> serviceSlots, int orderId)
+        private void RemoveServices(IEnumerable<int> serviceSlots)
         {
             foreach (var serviceSlot in serviceSlots)
             {
-                var connectingTable = _orderServicesRepository.Find(serviceSlot.ServiceSlotId, orderId);
-                if (connectingTable != null)
-                    _orderServicesRepository.Remove(connectingTable);
+                _serviceSlotsService.Cancel(serviceSlot);
             }
         }
     }

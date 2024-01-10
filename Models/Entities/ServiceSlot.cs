@@ -11,10 +11,9 @@ namespace PSP.Models.Entities
         public int ServiceId { get; set; }
         public Service Service { get; set; }
         public int EmployeeId { get; set; }
-        public DateTime Time { get; set; }
-        public int? CustomerId { get; set; }
+        public int? OrderId { get; set; }
+        public Order? Order { get; set; }
         public int? PartySize { get; set; }
         public bool Completed { get; set; }
-        public IList<OrderService> Orders { get; set; } = new List<OrderService>();
     }
 }

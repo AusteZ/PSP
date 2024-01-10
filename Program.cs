@@ -4,6 +4,7 @@ using PSP;
 using PSP.Models;
 using PSP.Models.DTOs;
 using PSP.Models.Entities;
+using PSP.Models.Entities.RelationalTables;
 using PSP.Repositories;
 using PSP.Services;
 using PSP.Services.Interfaces;
@@ -29,7 +30,6 @@ builder.Services.AddScoped<IBaseRepository<Cancellation>, CancellationRepository
 builder.Services.AddScoped<IBaseRepository<Product>, ProductsRepository>();
 builder.Services.AddScoped<IBaseRepository<Order>, OrdersRepository>();
 builder.Services.AddScoped<IBaseRepository<OrderProduct>, OrderProductsRepository>();
-builder.Services.AddScoped<IBaseRepository<OrderService>, OrderServicesRepository>();
 
 builder.Services.AddScoped<ICrudEntityService<Service, ServiceCreate>, ServicesService>();
 builder.Services.AddScoped<IServiceSlotsService, ServiceSlotsService>();

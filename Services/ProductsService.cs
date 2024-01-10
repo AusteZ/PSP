@@ -13,13 +13,10 @@ namespace PSP.Services
 
         protected override Product ModelToEntity(ProductCreate entity, int id = 0)
         {
-            return new Product()
-            {
-                Id = id,
-                Name = entity.Name,
-                PriceEuros = entity.PriceEuros,
-                ProductDescription = entity.ProductDescription,
-            };
+
+            var product = _mapper.Map<Product>(entity);
+            product.Id = id;
+            return product;
         }
     }
 }

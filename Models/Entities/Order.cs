@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Azure;
+using PSP.Models.Entities.RelationalTables;
 
 namespace PSP.Models.Entities
 {
@@ -15,6 +16,6 @@ namespace PSP.Models.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public IList<OrderProduct> Products { get; set; } = new List<OrderProduct>();
-        public IList<OrderService> ServiceSlots { get; set; } = new List<OrderService>();
+        public IList<ServiceSlot> ServiceSlots { get; set; } = new List<ServiceSlot>();
     }
 }

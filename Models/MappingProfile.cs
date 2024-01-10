@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using PSP.Models.DTOs;
+using PSP.Models.DTOs.Output;
 using PSP.Models.Entities;
 
 namespace PSP.Models;
@@ -8,25 +9,22 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Service, ServiceOutput>();
-        CreateMap<ServiceSlot, ServiceSlotOfServiceOutput>();
         CreateMap<ServiceCreate, Service>();
+        CreateMap<Service, ServiceWithNoRelations>();
 
-        CreateMap<ServiceSlot, ServiceSlotOutput>();
-        CreateMap<Service, ServiceOfServiceSlotOutput>();
         CreateMap<ServiceSlotCreate, ServiceSlot>();
+        CreateMap<ServiceSlot, ServiceSlotOutput>();
+        CreateMap<ServiceSlot, ServiceSlotWithNoRelations>();
+        CreateMap<ServiceSlot, ServiceSlotWithServiceOutput>();
 
         CreateMap<CancellationCreate, Cancellation>();
 
-        CreateMap<Product, ProductOutput>();
+        CreateMap<Product, ProductOutput>().ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders.Select(op => op.Order))); ;
+        CreateMap<ProductCreate, Product>();
 
-        CreateMap<Order, OrderOutput>()
-            .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products.Select(op => new ProductOfOrder
-            {
-                Id = op.Product.Id,
-                Name = op.Product.Name,
-                PriceEuros = op.Product.PriceEuros,
-                ProductDescription = op.Product.ProductDescription
-            })))
-            .ForMember(dest => dest.ServiceSlots, opt => opt.MapFrom(src => src.ServiceSlots.Select(os => os.ServiceSlot)));
+        CreateMap<Product, ProductWithNoRelations>();
+        CreateMap<Order, OrderOutput>().ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products.Select(op => op.Product)));
+        CreateMap<OrderCreate, Order>();
+        CreateMap<Order, OrderWithNoRelations>();
     }
 }

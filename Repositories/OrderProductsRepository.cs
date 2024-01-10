@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PSP.Models.Entities;
+﻿using PSP.Models.Entities;
+using PSP.Models.Entities.RelationalTables;
 
 namespace PSP.Repositories
 {

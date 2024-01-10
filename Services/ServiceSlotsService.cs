@@ -34,14 +34,13 @@ namespace PSP.Services
             return base.Update(creationModel, id);
         }
 
-        public void Book(int id, ServiceSlotBooking booking)
+        public void Book(int id, int orderId)
         {
             var slot = base.Get(id);
-            if (slot.CustomerId != null)
+            if (slot.OrderId != null)
                 throw new UserFriendlyException("This time slot is taken!", 400);
 
-            slot.CustomerId = booking.CustomerId;
-            slot.PartySize = booking.PartySize;
+            slot.OrderId = orderId;
             base.Update(slot);
         }
 
@@ -52,10 +51,10 @@ namespace PSP.Services
             {
                 CancellationTime = DateTime.Now,
                 ServiceSlotId = id,
-                CustomerId = slot.CustomerId ?? throw new UserFriendlyException("This time slot is free!", 400),
+                OrderId = slot.OrderId ?? throw new UserFriendlyException("This time slot is free!", 400),
             };
 
-            slot.CustomerId = null;
+            slot.OrderId = null;
             slot.PartySize = null;
 
             _cancellationService.Add(cancellation);
@@ -67,7 +66,7 @@ namespace PSP.Services
             var query = _repository.GetQueryable();
 
             if (isFree != null)
-                query = query.Where(e => isFree.Value ? e.CustomerId == null : e.CustomerId != null);
+                query = query.Where(e => isFree.Value ? e.OrderId == null : e.OrderId != null);
             if (employeeId != null)
                 query = query.Where(e => e.EmployeeId == employeeId);
             if (serviceId != null)

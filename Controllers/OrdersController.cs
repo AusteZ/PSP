@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
+using PSP.Models.DTOs.Output;
 using PSP.Models.Entities;
 using PSP.Services.Interfaces;
 

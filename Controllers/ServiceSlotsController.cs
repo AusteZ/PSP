@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
+using PSP.Models.DTOs.Output;
 using PSP.Models.Entities;
 using PSP.Services.Interfaces;
 
@@ -40,9 +41,9 @@ namespace PSP.Controllers
         }
 
         [HttpPost("{id}/book")]
-        public ActionResult Book(int id, [FromBody] ServiceSlotBooking body)
+        public ActionResult Book(int id, [FromQuery] int orderId)
         {
-            _service.Book(id, body);
+            _service.Book(id, orderId);
             return Ok();
         }
 

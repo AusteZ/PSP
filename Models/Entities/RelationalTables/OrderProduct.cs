@@ -1,4 +1,4 @@
-﻿namespace PSP.Models.Entities
+﻿namespace PSP.Models.Entities.RelationalTables
 {
     public class OrderProduct
     {
