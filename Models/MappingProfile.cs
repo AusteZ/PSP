@@ -20,7 +20,7 @@ public class MappingProfile : Profile
 
         CreateMap<CancellationCreate, Cancellation>();
 
-        CreateMap<Product, ProductOutput>().ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders.Select(op => op.Order))); ;
+        CreateMap<Product, ProductOutput>().ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders.Select(op => op.Order)));
         CreateMap<ProductCreate, Product>();
         CreateMap<Product, ProductWithNoRelations>();
         CreateMap<OrderProduct, ProductWithQuantity>();
