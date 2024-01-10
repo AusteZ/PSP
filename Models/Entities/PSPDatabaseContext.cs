@@ -19,7 +19,6 @@ public class PSPDatabaseContext : DbContext
     public DbSet<OrderProduct> OrderProducts { get; set; } = null!;
     public DbSet<Receipt> Receipts { get; set; } = null!;
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Service>()
