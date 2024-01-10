@@ -1,4 +1,5 @@
-﻿using PSP.Models.DTOs;
+﻿using AutoMapper;
+using PSP.Models.DTOs;
 using PSP.Models.Entities;
 using PSP.Repositories;
 using PSP.Services.Interfaces;
@@ -7,19 +8,15 @@ namespace PSP.Services
 {
     public class ServicesService : CrudEntityService<Service, ServiceCreate>
     {
-        public ServicesService(IBaseRepository<Service> repository) : base(repository)
+        public ServicesService(IBaseRepository<Service> repository, IMapper mapper) :
+            base(repository, mapper)
         { }
 
         protected override Service ModelToEntity(ServiceCreate entity, int id = 0)
         {
-            return new Service()
-            {
-                Id = id,
-                EuroCost = entity.EuroCost,
-                MinutesLength = entity.MinutesLength,
-                ServiceName = entity.ServiceName,
-                ServiceDescription = entity.ServiceDescription,
-            };
+            var service = _mapper.Map<Service>(entity);
+            service.Id = id;
+            return service;
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
+using PSP.Models.DTOs.Output;
 using PSP.Models.Entities;
 using PSP.Services.Interfaces;
 
@@ -10,34 +12,36 @@ namespace PSP.Controllers
     public class ServicesController : Controller
     {
         private readonly ICrudEntityService<Service, ServiceCreate> _service;
+        private readonly IMapper _mapper;
 
-        public ServicesController(ICrudEntityService<Service, ServiceCreate> service)
+        public ServicesController(ICrudEntityService<Service, ServiceCreate> service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public ActionResult GetAll()
         {
-            return Ok(_service.GetAll());
+            return Ok(_mapper.Map<IEnumerable<ServiceOutput>>(_service.GetAll()));
         }
 
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return Ok(_service.Get(id));
+            return Ok(_mapper.Map<ServiceOutput>(_service.Get(id)));
         }
 
         [HttpPost]
         public ActionResult Post([FromBody] ServiceCreate body)
         {
-            return Ok(_service.Add(body));
+            return Ok(_mapper.Map<ServiceOutput>(_service.Add(body)));
         }
 
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody]ServiceCreate body)
         {
-            return Ok(_service.Update(body, id));
+            return Ok(_mapper.Map<ServiceOutput>(_service.Update(body, id)));
         }
 
         [HttpDelete("{id}")]

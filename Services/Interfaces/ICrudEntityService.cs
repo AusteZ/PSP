@@ -9,7 +9,9 @@ namespace PSP.Services.Interfaces
         T Get(int id);
         T Add(TCreate entity);
         T Update(TCreate creationModel, int id);
-        T Update(T entity);
+        T Update(T creationEntity);
         void Delete(int id);
+        void CheckFor404(T? entity, int id);
+        void CheckFor404(int id);
     }
 }

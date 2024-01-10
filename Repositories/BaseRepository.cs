@@ -18,9 +18,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return _dbSet.ToList();
     }
 
-    public virtual T? Find(int id)
+    public virtual T? Find(params int[] ids)
     {
-        return _dbSet.Find(id);
+        return _dbSet.Find(ids[0]);
     }
 
     public virtual T Add(T entity)
@@ -30,12 +30,18 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return addedEntity.Entity;
     }
 
-    public virtual T Update(T entity)
+    public virtual T Update(T entity, T newEntity)
     {
-        _dbSet.Attach(entity);
-        _dbContext.Entry(entity).State = EntityState.Modified;
+        _dbContext.Entry(entity).CurrentValues.SetValues(newEntity);
         _dbContext.SaveChanges();
         return entity;
+    }
+
+    public virtual T Update(T entity)
+    {
+        var addedEntity = _dbSet.Update(entity);
+        _dbContext.SaveChanges();
+        return addedEntity.Entity;
     }
 
     public virtual void Remove(T entity)
@@ -44,7 +50,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         _dbContext.SaveChanges();
     }
 
-    public IQueryable<T> GetQueryable()
+    public virtual IQueryable<T> GetQueryable()
     {
         return _dbSet.AsQueryable();
     }

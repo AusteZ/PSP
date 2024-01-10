@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using PSP.Models.DTOs;
+using PSP.Models.DTOs.Output;
 using PSP.Models.Entities;
+using PSP.Services.Interfaces;
 
 namespace PSP.Controllers
 {
@@ -7,67 +11,44 @@ namespace PSP.Controllers
     [Route("[controller]")]
     public class OrdersController : Controller
     {
-        private readonly PSPDatabaseContext _db;
+        private readonly ICrudEntityService<Order, OrderCreate> _service;
+        private readonly IMapper _mapper;
 
-        public OrdersController(PSPDatabaseContext db) 
+        public OrdersController(ICrudEntityService<Order, OrderCreate> service, IMapper mapper)
         {
-            _db = db;
+            _service = service;
+            _mapper = mapper;
         }
 
-        // GET: Orders/:id
+        [HttpGet]
+        public ActionResult GetAll()
+        {
+            return Ok(_mapper.Map<IEnumerable<OrderOutput>>(_service.GetAll()));
+        }
+
         [HttpGet("{id}")]
-        public ActionResult Index(int id)
+        public ActionResult Get(int id)
         {
-            Order? order = _db.Orders.Find(id);
-
-            if (order != null) 
-            {
-                return Ok(order);
-            }
-            else
-            {
-                return StatusCode(404);
-            }
+            return Ok(_mapper.Map<OrderOutput>(_service.Get(id)));
         }
 
-        // POST: Orders
         [HttpPost]
-        public ActionResult Post(IFormCollection requestParams)
+        public ActionResult Post([FromBody] OrderCreate body)
         {
-            try
-            {
-                Order order = new Order();
-                order.PaymentStatus = requestParams["paymentStatus"];
-
-                _db.Orders.Add(order);
-                _db.SaveChanges();
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            return Ok(_mapper.Map<OrderOutput>(_service.Add(body)));
         }
 
-        // PUT: Orders/:id
         [HttpPut("{id}")]
-        public ActionResult Put(int id, IFormCollection collection)
+        public ActionResult Put(int id, [FromBody] OrderCreate body)
         {
-            try
-            {
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            return Ok(_mapper.Map<OrderOutput>(_service.Update(body, id)));
         }
 
-        // DELETE: Orders/:id
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            return Ok();
+            _service.Delete(id);
+            return NoContent();
         }
     }
 }
