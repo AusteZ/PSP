@@ -8,7 +8,6 @@ public class PSPDatabaseContext : DbContext
     public PSPDatabaseContext(DbContextOptions<PSPDatabaseContext> options)
     : base(options)
     {
-        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         Database.EnsureCreated();
     }
 
