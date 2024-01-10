@@ -16,8 +16,8 @@ namespace PSP.Controllers
     public class AuthController : Controller
     {
         private readonly ICustomersService _service;
-
         private readonly IConfiguration _config;
+
         public AuthController(ICustomersService service, IConfiguration config)
         {
             _service = service;

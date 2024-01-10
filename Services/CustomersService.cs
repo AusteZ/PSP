@@ -14,12 +14,8 @@ namespace PSP.Services
         {
             var currentUser = _repository.GetQueryable().SingleOrDefault(user => user.Username.ToLower() ==
                 customerLoginDto.Username.ToLower() && user.Password == customerLoginDto.Password);
-            if (currentUser != null)
-            {
-                return currentUser;
-            }
 
-            return null;
+            return currentUser;
         }
 
         protected override Customer ModelToEntity(CustomerLogin dto, int id = 0)
