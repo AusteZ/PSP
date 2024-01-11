@@ -42,6 +42,7 @@ namespace PSP.Controllers
             return Ok(_mapper.Map<ReceiptOutput>(_service.Get(orderId)));
         }
 
+        // TODO: no orders showing up, need to fix
         [HttpGet("Receipt")]
         public ActionResult GetAllOrderReceipts()
         {

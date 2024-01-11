@@ -63,6 +63,7 @@ builder.Services.AddScoped<ICustomersService, CustomersService>();
 builder.Services.AddScoped<ICrudEntityService<Order, OrderCreate>, OrdersService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<ICrudEntityService<Coupon, CouponCreate>, CouponService>();
+builder.Services.AddScoped<IPaymentService, PaymentsService>();
 builder.Services.AddScoped<ICrudEntityService<Discount, DiscountCreate>, DiscountService>();
 
 builder.Services.AddControllers();

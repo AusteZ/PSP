@@ -60,7 +60,8 @@ namespace PSP.Services
             var receipt = new Receipt() {
                 OrderId = order.Id,
                 Date = DateTime.Now,
-                Coupon = couponId == null ? _couponService.Get((int)couponId) : null!,
+                CouponId = couponId,
+                Coupon = couponId != null ? _couponService.Get((int)couponId) : null,
                 Total = (decimal)(order.ServiceSlots.Select(x => x.Service.EuroCost).Concat(order.Products.Select(x => x.Product.PriceEuros * x.Quantity)).Sum() + order.Tips),
                 PaymentType = type,
             };
