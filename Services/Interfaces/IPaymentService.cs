@@ -7,8 +7,8 @@ namespace PSP.Services.Interfaces
 {
     public interface IPaymentService
     {
-        public ReceiptOutput PayWithCard(OrderOutput order, CardPayment card, float tip);
-        public ReceiptOutput PayWithCash(OrderOutput order, float tip);
+        public ReceiptOutput PayWithCard(Order order, CardPayment card, int? couponId);
+        public ReceiptOutput PayWithCash(Order order, int? couponId);
         public IEnumerable<Receipt> GetAll();
         public Receipt Get(int id);
     }

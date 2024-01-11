@@ -15,16 +15,18 @@ namespace PSP.Services
     {
         private readonly IBaseRepository<Receipt> _receiptRepository;
         private readonly ICrudEntityService<Order, OrderCreate> _orderService;
+        private readonly ICrudEntityService<Coupon, CouponCreate> _couponService;
         private readonly IMapper _mapper;
 
-        public PaymentsService(IBaseRepository<Receipt> repository, ICrudEntityService<Order, OrderCreate> ordersService, IMapper mapper) 
+        public PaymentsService(IBaseRepository<Receipt> repository, ICrudEntityService<Order, OrderCreate> ordersService, ICrudEntityService<Coupon, CouponCreate> couponService, IMapper mapper) 
         {
             _receiptRepository = repository;
             _orderService = ordersService;
+            _couponService = couponService;
             _mapper = mapper;
         }
 
-        public ReceiptOutput PayWithCard(OrderOutput order, CardPayment card, float tip )
+        public ReceiptOutput PayWithCard(Order order, CardPayment card, int? couponId )
         {
             if (new CreditCardAttribute().IsValid(card.CardNumber))
                 throw new UserFriendlyException("The card number is not valid", 400);
@@ -36,12 +38,12 @@ namespace PSP.Services
 
             ProcessPayment();
 
-            return SaveReceipt(order, PaymentType.card, tip);
+            return SaveReceipt(order, PaymentType.card, couponId);
         }
 
-        public ReceiptOutput PayWithCash(OrderOutput order, float tip)
+        public ReceiptOutput PayWithCash(Order order, int? couponId)
         {
-            return SaveReceipt(order, PaymentType.cash, tip);
+            return SaveReceipt(order, PaymentType.cash, couponId);
         }
 
         private void ProcessPayment()
@@ -49,25 +51,40 @@ namespace PSP.Services
             //To connect some payment gateway
         }
 
-        private ReceiptOutput SaveReceipt(OrderOutput order, PaymentType type, float tip)
+        private ReceiptOutput SaveReceipt(Order order, PaymentType type, int? couponId)
         {
             order.Status = PaymentStatus.completed;
 
-            _orderService.Update(_mapper.Map<OrderCreate>(order), order.Id);//TODO Avoid unnecessary mapping, but even if Order update exists, there probably will still be a cast from OrderOutput to Order
+            //_orderService.Update(_mapper.Map<OrderCreate>(order), order.Id);//TODO Avoid unnecessary mapping
 
+
+            var servicesDiscounts = order.ServiceSlots.Select(x => x.Service.EuroCost * MultiplyAllDiscounts(x.Service.Discounts.Select(x => x.Discount).Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now) >= 0).Select(x => x.Percentage / 100.0))).Sum();
+
+            var productDiscounts = order.Products.Select(x => x.Product.PriceEuros * x.Quantity * MultiplyAllDiscounts(x.Product.Discounts.Select(x => x.Discount).Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now) >= 0).Select(x => x.Percentage / 100.0))).Sum();
+
+            Coupon? coupon = couponId == null ? _mapper.Map<Coupon>(couponId) : null;
             var receipt = new Receipt() {
                 OrderId = order.Id,
                 Date = DateTime.Now,
-                Tip = (decimal)tip,
-                Total = (decimal)(order.ServiceSlots.Select(x => x.Service.EuroCost).Concat(order.Products.Select(x => x.Product.PriceEuros * x.Quantity)).Sum() + tip),
+                Total = (decimal)(servicesDiscounts + productDiscounts + order.Tips - (coupon != null ? coupon.EuroPrice : 0)),
+                Coupon = coupon,
                 PaymentType = type,
             };
             _receiptRepository.Add(receipt);
             var receiptOutput = _mapper.Map<ReceiptOutput>(receipt);
-            receiptOutput.Order = order;
+            receiptOutput.Order = _mapper.Map<OrderOutput>(order);
             receiptOutput.PaymentType = type.ToString();
 
             return receiptOutput;
+        }
+        private double MultiplyAllDiscounts(IEnumerable<double> percentages)
+        {
+            double product = 1.0;
+            foreach (var percentage in percentages)
+            {
+                product *= (1-percentage);
+            }
+            return product;
         }
 
         public IEnumerable<Receipt> GetAll()

@@ -4,6 +4,8 @@
     {
         public int OrderId { get; set; }
         public Order Order { get; set; }
+        public Coupon? Coupon { get; set; }
+        public int? CouponId { get; set; }
         public DateTime? Date { get; set; }
         public decimal Total { get; set; }
         public decimal Tip { get; set; }
