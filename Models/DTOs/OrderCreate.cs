@@ -12,5 +12,6 @@ namespace PSP.Models.DTOs
         public PaymentStatus Status { get; set; }
         public IList<int> ProductsIds { get; set; }
         public IList<int> serviceSlotIds { get; set; }
+        public int LoyaltyPointsToUse { get; set; }
     }
 }

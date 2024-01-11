@@ -9,6 +9,7 @@
         public DateTime? Date { get; set; }
         public float Total { get; set; }
         public PaymentType PaymentType { get; set; }
+        public int LoyaltyPointsUsed { get; set; }
     }
 
     public enum PaymentType

@@ -7,5 +7,6 @@
         public CouponOutput? Coupon { get; set; }
         public DateTime? Date { get; set; }
         public string PaymentType { get; set; }
+        public int LoyaltyPointsUsed { get; set; }
     }
 }

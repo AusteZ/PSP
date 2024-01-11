@@ -13,6 +13,7 @@ namespace PSP.Models.Entities
         [Required]
         public string Password { get; set; }
         public string? Role { get; set; }
+        public int LoyaltyPoints { get; set; }
         public IList<Order> Orders { get; set; }
     }
 }

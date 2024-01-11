@@ -47,5 +47,8 @@ public class MappingProfile : Profile
         CreateMap<DiscountCreate, Discount>();
         CreateMap<Discount, DiscountWithNoRelations>();
         CreateMap<Receipt, ReceiptOutput>().ForMember(dest => dest.Order, opt => opt.MapFrom(s => s.Order));
+
+        CreateMap<CustomerCreate, Customer>();
+        CreateMap<Customer, CustomerOutput>();
     }
 }

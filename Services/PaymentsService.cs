@@ -15,18 +15,15 @@ namespace PSP.Services
         private readonly IBaseRepository<Receipt> _receiptRepository;
         private readonly ICrudEntityService<Order, OrderCreate> _orderService;
         private readonly ICrudEntityService<Coupon, CouponCreate> _couponService;
-        private readonly IProductsService _productsService;
-        private readonly IServicesService _servicesService;
-        private readonly IMapper _mapper;
+        private readonly ICustomersService _customersService;
 
-        public PaymentsService(IBaseRepository<Receipt> repository, ICrudEntityService<Order, OrderCreate> ordersService,  ICrudEntityService<Coupon, CouponCreate> couponService, IProductsService productsService, IServicesService servicesService, IMapper mapper) 
+        public PaymentsService(IBaseRepository<Receipt> repository, ICrudEntityService<Order, OrderCreate> ordersService, ICrudEntityService<Coupon, CouponCreate> couponService,
+            ICustomersService customersService) 
         {
             _receiptRepository = repository;
             _orderService = ordersService;
             _couponService = couponService;
-            _productsService = productsService;
-            _servicesService = servicesService;
-            _mapper = mapper;
+            _customersService = customersService;
         }
 
         public Receipt PayWithCard(int orderId, CardPayment card, int? couponId )
@@ -69,7 +66,11 @@ namespace PSP.Services
                 _couponService.Update(coupon);
             }
 
-            var receipt = new Receipt() {
+            var loyaltyPointsUsed = Math.Min(order.LoyaltyPointsToUse, order.Customer.LoyaltyPoints);
+            loyaltyPointsUsed = Math.Min(loyaltyPointsUsed, Convert.ToInt32(totalPrice * 100));
+            totalPrice -= (float)loyaltyPointsUsed / 100;
+
+            var receipt = new Receipt {
                 OrderId = order.Id,
                 Date = DateTime.Now,
                 Total = totalPrice,
@@ -77,6 +78,9 @@ namespace PSP.Services
                 PaymentType = type,
             };
             _receiptRepository.Add(receipt);
+            order.Customer.LoyaltyPoints -= loyaltyPointsUsed;
+            order.Customer.LoyaltyPoints += Convert.ToInt32(totalPrice);
+            _customersService.Update(order.Customer);
             return receipt;
         }
 

@@ -10,26 +10,27 @@ namespace PSP.Services
 {
     public class OrdersService : CrudEntityService<Order, OrderCreate>
     {
-        private readonly IBaseRepository<OrderProduct> _orderProductsRepository;
         private readonly IServiceSlotsService _serviceSlotsService;
         private readonly IProductsService _productsService;
+        private readonly ICustomersService _customersService;
 
         public OrdersService(IBaseRepository<Order> repository,
-            IBaseRepository<OrderProduct> orderProductsRepository,
             IServiceSlotsService servicesSlotsService,
             IProductsService productsService,
+            ICustomersService customersService,
             IMapper mapper)
             : base(repository, mapper)
         {
-            _orderProductsRepository = orderProductsRepository;
             _serviceSlotsService = servicesSlotsService;
             _productsService = productsService;
+            _customersService = customersService;
         }
 
         protected override Order ModelToEntity(OrderCreate entity, int id = 0)
         {
             var order = _mapper.Map<Order>(entity);
             order.Id = id;
+            order.Customer = _customersService.Get(entity.CustomerId);
             return order;
         }
 
