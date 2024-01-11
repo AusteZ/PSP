@@ -85,5 +85,17 @@ namespace PSP.Services
                 _servicesService.RemoveFromDiscount(product, discountId);
             }
         }
+
+        public static Discount? GetLargestValid(IList<ProductDiscount> discounts)
+        {
+            var validDiscounts = discounts.Where(d => d.Discount.StartDate < DateTime.Now && d.Discount.EndDate > DateTime.Now);
+            return validDiscounts.OrderByDescending(x => x.Discount.Percentage).FirstOrDefault(new ProductDiscount()).Discount;
+        }
+
+        public static Discount? GetLargestValid(IList<ServiceDiscount> discounts)
+        {
+            var validDiscounts = discounts.Where(d => d.Discount.StartDate < DateTime.Now && d.Discount.EndDate > DateTime.Now);
+            return validDiscounts.OrderByDescending(x => x.Discount.Percentage).FirstOrDefault(new ServiceDiscount()).Discount;
+        }
     }
 }

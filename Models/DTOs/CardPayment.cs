@@ -1,4 +1,4 @@
-﻿namespace PSP.Models.DTOs.Payments
+﻿namespace PSP.Models.DTOs
 {
     public class CardPayment
     {

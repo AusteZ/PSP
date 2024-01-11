@@ -11,14 +11,14 @@ namespace PSP.Repositories
 
         public override Order? Find(params int[] ids)
         {
-            return _dbSet.Include(e => e.Products).ThenInclude(e => e.Product)
-                .Include(e => e.ServiceSlots).ThenInclude(e => e.Service).FirstOrDefault(e => e.Id == ids[0]);
+            return _dbSet.Include(e => e.Products).ThenInclude(e => e.Product).ThenInclude(e => e.Discounts).ThenInclude(e => e.Discount)
+                .Include(e => e.ServiceSlots).ThenInclude(e => e.Service).ThenInclude(e => e.Discounts).ThenInclude(e => e.Discount).FirstOrDefault(e => e.Id == ids[0]);
         }
 
         public override IEnumerable<Order> FindAll()
         {
-            return _dbSet.Include(e => e.Products).ThenInclude(e => e.Product)
-                .Include(e => e.ServiceSlots).ThenInclude(e => e.Service).ToList();
+            return _dbSet.Include(e => e.Products).ThenInclude(e => e.Product).ThenInclude(e => e.Discounts).ThenInclude(e => e.Discount)
+                .Include(e => e.ServiceSlots).ThenInclude(e => e.Service).ThenInclude(e => e.Discounts).ThenInclude(e => e.Discount).ToList();
         }
     }
 }

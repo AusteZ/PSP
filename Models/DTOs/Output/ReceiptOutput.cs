@@ -4,7 +4,6 @@
     {
         public OrderOutput Order { get; set; }
         public decimal Total { get; set; }
-        public decimal Tip { get; set; }
         public CouponOutput? Coupon { get; set; }
         public DateTime? Date { get; set; }
         public string PaymentType { get; set; }

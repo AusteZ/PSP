@@ -7,9 +7,7 @@
         public Coupon? Coupon { get; set; }
         public int? CouponId { get; set; }
         public DateTime? Date { get; set; }
-        public decimal Total { get; set; }
-        public int? CouponId { get; set; }
-        public Coupon? Coupon { get; set; }
+        public float Total { get; set; }
         public PaymentType PaymentType { get; set; }
     }
 

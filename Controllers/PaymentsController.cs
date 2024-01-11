@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
 using PSP.Models.DTOs.Output;
-using PSP.Models.DTOs.Payments;
 using PSP.Models.Entities;
-using PSP.Services;
 using PSP.Services.Interfaces;
 
 namespace PSP.Controllers
@@ -27,13 +25,13 @@ namespace PSP.Controllers
         [HttpPost("card")]
         public ActionResult PayWithCard(int orderId, [FromBody] CardPayment card, int? couponId = null)
         {
-            return Ok(_service.PayWithCard(_mapper.Map<Order>(_orderService.Get(orderId)), card, couponId));
+            return Ok(_mapper.Map<ReceiptOutput>(_service.PayWithCard(orderId, card, couponId)));
         }
 
         [HttpPost("cash")]
         public ActionResult PayWithCash(int orderId, int? couponId = null)
         {
-            return Ok(_service.PayWithCash(_orderService.Get(orderId), couponId));
+            return Ok(_mapper.Map<ReceiptOutput>(_service.PayWithCash(orderId, couponId)));
         }
 
         [HttpGet("Receipt/{orderId}")]
