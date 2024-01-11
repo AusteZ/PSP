@@ -13,20 +13,15 @@ namespace PSP.Services
     public class PaymentsService : IPaymentService
     {
         private readonly IBaseRepository<Receipt> _receiptRepository;
-        private readonly ICrudEntityService<Order, OrderCreate> _orderService;
+        private readonly IOrdersService _orderService;
         private readonly ICrudEntityService<Coupon, CouponCreate> _couponService;
-        private readonly IProductsService _productsService;
-        private readonly IServicesService _servicesService;
-        private readonly IMapper _mapper;
 
-        public PaymentsService(IBaseRepository<Receipt> repository, ICrudEntityService<Order, OrderCreate> ordersService,  ICrudEntityService<Coupon, CouponCreate> couponService, IProductsService productsService, IServicesService servicesService, IMapper mapper) 
+        public PaymentsService(IBaseRepository<Receipt> repository, IOrdersService ordersService,
+            ICrudEntityService<Coupon, CouponCreate> couponService)
         {
             _receiptRepository = repository;
             _orderService = ordersService;
             _couponService = couponService;
-            _productsService = productsService;
-            _servicesService = servicesService;
-            _mapper = mapper;
         }
 
         public Receipt PayWithCard(int orderId, CardPayment card, int? couponId )

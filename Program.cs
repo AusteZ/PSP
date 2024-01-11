@@ -61,7 +61,7 @@ builder.Services.AddScoped<IServicesService, ServicesService>();
 builder.Services.AddScoped<IServiceSlotsService, ServiceSlotsService>();
 builder.Services.AddScoped<ICrudEntityService<Cancellation, CancellationCreate>, CancellationService>();
 builder.Services.AddScoped<ICustomersService, CustomersService>();
-builder.Services.AddScoped<ICrudEntityService<Order, OrderCreate>, OrdersService>();
+builder.Services.AddScoped<IOrdersService, OrdersService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<ICrudEntityService<Coupon, CouponCreate>, CouponService>();
 builder.Services.AddScoped<ICrudEntityService<Discount, DiscountCreate>, DiscountService>();
