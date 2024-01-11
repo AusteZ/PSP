@@ -31,6 +31,7 @@ public class MappingProfile : Profile
         CreateMap<Order, OrderOutput>()
             .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products));
         CreateMap<OrderCreate, Order>();
+        CreateMap<Order, OrderCreate>();
         CreateMap<OrderOutput, OrderCreate>().ForMember(dest => dest.serviceSlotIds, opt => opt.MapFrom(src => src.ServiceSlots.Select(op => op.Id))).ForMember(dest => dest.ProductsIds, opt => opt.MapFrom(src => src.Products.Select(op => op.Product.Id)));
         CreateMap<Order, OrderWithNoRelations>();
 

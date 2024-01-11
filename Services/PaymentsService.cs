@@ -16,13 +16,17 @@ namespace PSP.Services
         private readonly IBaseRepository<Receipt> _receiptRepository;
         private readonly ICrudEntityService<Order, OrderCreate> _orderService;
         private readonly ICrudEntityService<Coupon, CouponCreate> _couponService;
+        private readonly IProductsService _productsService;
+        private readonly IServicesService _servicesService;
         private readonly IMapper _mapper;
 
-        public PaymentsService(IBaseRepository<Receipt> repository, ICrudEntityService<Order, OrderCreate> ordersService, ICrudEntityService<Coupon, CouponCreate> couponService, IMapper mapper) 
+        public PaymentsService(IBaseRepository<Receipt> repository, ICrudEntityService<Order, OrderCreate> ordersService,  ICrudEntityService<Coupon, CouponCreate> couponService, IProductsService productsService, IServicesService servicesService, IMapper mapper) 
         {
             _receiptRepository = repository;
             _orderService = ordersService;
             _couponService = couponService;
+            _productsService = productsService;
+            _servicesService = servicesService;
             _mapper = mapper;
         }
 
@@ -55,8 +59,7 @@ namespace PSP.Services
         {
             order.Status = PaymentStatus.completed;
 
-            //_orderService.Update(_mapper.Map<OrderCreate>(order), order.Id);//TODO Avoid unnecessary mapping
-
+            _orderService.Update(_mapper.Map<OrderCreate>(order), order.Id);
 
             var servicesDiscounts = order.ServiceSlots.Select(x => x.Service.EuroCost * MultiplyAllDiscounts(x.Service.Discounts.Select(x => x.Discount).Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now) >= 0).Select(x => x.Percentage / 100.0))).Sum();
 
