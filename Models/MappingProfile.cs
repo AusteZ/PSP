@@ -9,7 +9,8 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Service, ServiceOutput>();
+        CreateMap<Service, ServiceOutput>()
+            .ForMember(dest => dest.Discounts, opt => opt.MapFrom(src => src.Discounts.Select(sd => sd.Discount)));
         CreateMap<ServiceCreate, Service>();
         CreateMap<Service, ServiceWithNoRelations>();
 
@@ -20,15 +21,27 @@ public class MappingProfile : Profile
 
         CreateMap<CancellationCreate, Cancellation>();
 
-        CreateMap<Product, ProductOutput>().ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders.Select(op => op.Order)));
+        CreateMap<Product, ProductOutput>()
+            .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders.Select(op => op.Order)))
+            .ForMember(dest => dest.Discounts, opt => opt.MapFrom(src => src.Discounts.Select(pd => pd.Discount)));
         CreateMap<ProductCreate, Product>();
         CreateMap<Product, ProductWithNoRelations>();
         CreateMap<OrderProduct, ProductWithQuantity>();
 
-        CreateMap<Order, OrderOutput>().ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products));
+        CreateMap<Order, OrderOutput>()
+            .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products));
         CreateMap<OrderCreate, Order>();
         CreateMap<OrderOutput, OrderCreate>().ForMember(dest => dest.serviceSlotIds, opt => opt.MapFrom(src => src.ServiceSlots.Select(op => op.Id))).ForMember(dest => dest.ProductsIds, opt => opt.MapFrom(src => src.Products.Select(op => op.Product.Id)));
         CreateMap<Order, OrderWithNoRelations>();
+
+        CreateMap<CouponCreate, Coupon>();
+        CreateMap<Coupon, CouponOutput>();
+
+        CreateMap<Discount, DiscountOutput>()
+            .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products.Select(pd => pd.Product)))
+            .ForMember(dest => dest.Services, opt => opt.MapFrom(src => src.Services.Select(sd => sd.Service)));
+        CreateMap<DiscountCreate, Discount>();
+        CreateMap<Discount, DiscountWithNoRelations>();
         CreateMap<Receipt, ReceiptOutput>().ForMember(dest => dest.Order, opt => opt.MapFrom(s => s.Order));
     }
 }

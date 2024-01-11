@@ -10,13 +10,16 @@ namespace PSP.Services
     public class ProductsService : CrudEntityService<Product, ProductCreate>, IProductsService
     {
         private readonly IBaseRepository<OrderProduct> _orderProductsRepository;
+        private readonly IBaseRepository<ProductDiscount> _productDiscountRepository;
 
         public ProductsService(
             IBaseRepository<Product> repository,
             IMapper mapper,
-            IBaseRepository<OrderProduct> orderProductsRepository) : base(repository, mapper)
+            IBaseRepository<OrderProduct> orderProductsRepository,
+            IBaseRepository<ProductDiscount> productDiscountRepository) : base(repository, mapper)
         {
             _orderProductsRepository = orderProductsRepository;
+            _productDiscountRepository = productDiscountRepository;
         }
 
         public void AddToOrder(int id, int orderId, int quantity)
@@ -52,6 +55,33 @@ namespace PSP.Services
                 _orderProductsRepository.Remove(relationship);
             else
                 _orderProductsRepository.Update(relationship);
+        }
+
+        public void AddToDiscount(int id, int discountId)
+        {
+            var relationship = _productDiscountRepository.Find(id, discountId);
+            if (relationship != null)
+            {
+                return;
+            }
+
+            _productDiscountRepository.Add(new ProductDiscount()
+            {
+                DiscountId = discountId,
+                ProductId = id,
+                Product = Get(id),
+            });
+        }
+
+        public void RemoveFromDiscount(int id, int discountId)
+        {
+            var relationship = _productDiscountRepository.Find(id, discountId);
+            if (relationship == null)
+            {
+                return;
+            }
+
+            _productDiscountRepository.Remove(relationship);
         }
 
         protected override Product ModelToEntity(ProductCreate entity, int id = 0)

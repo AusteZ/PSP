@@ -9,6 +9,7 @@ namespace PSP.Models.DTOs
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public PaymentStatus Status { get; set; }
+        public float Tips { get; set; }
         public IList<int> ProductsIds { get; set; }
         public IList<int> serviceSlotIds { get; set; }
     }
