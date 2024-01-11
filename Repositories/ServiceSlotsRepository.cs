@@ -18,17 +18,17 @@ namespace PSP.Repositories
 
         public override ServiceSlot? Find(params int[] ids)
         {
-            return _dbSet.Include(e => e.Service).FirstOrDefault(e => e.Id == ids[0]);
+            return _dbSet.Include(e => e.Service).ThenInclude(e => e.Discounts).ThenInclude(e => e.Discount).FirstOrDefault(e => e.Id == ids[0]);
         }
 
         public override IEnumerable<ServiceSlot> FindAll()
         {
-            return _dbSet.Include(e => e.Service).ToList();
+            return _dbSet.Include(e => e.Service).ThenInclude(e => e.Discounts).ThenInclude(e => e.Discount).ToList();
         }
 
         public override IQueryable<ServiceSlot> GetQueryable()
         {
-            return _dbSet.Include(e => e.Service).AsQueryable();
+            return _dbSet.Include(e => e.Service).ThenInclude(e => e.Discounts).ThenInclude(e => e.Discount).AsQueryable();
         }
     }
 }

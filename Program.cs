@@ -54,6 +54,7 @@ builder.Services.AddScoped<IBaseRepository<ProductDiscount>, ProductDiscountsRep
 builder.Services.AddScoped<IBaseRepository<ServiceDiscount>, ServiceDiscountsRepository>();
 builder.Services.AddScoped<IBaseRepository<Receipt>, ReceiptRepository>();
 builder.Services.AddScoped<IBaseRepository<Customer>, CustomersRepository>();
+builder.Services.AddScoped<IBaseRepository<Receipt>, ReceiptRepository>();
 
 // Services
 builder.Services.AddScoped<IServicesService, ServicesService>();
@@ -63,8 +64,8 @@ builder.Services.AddScoped<ICustomersService, CustomersService>();
 builder.Services.AddScoped<ICrudEntityService<Order, OrderCreate>, OrdersService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<ICrudEntityService<Coupon, CouponCreate>, CouponService>();
-builder.Services.AddScoped<IPaymentService, PaymentsService>();
 builder.Services.AddScoped<ICrudEntityService<Discount, DiscountCreate>, DiscountService>();
+builder.Services.AddScoped<IPaymentService, PaymentsService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

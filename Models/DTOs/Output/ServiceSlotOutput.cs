@@ -32,6 +32,6 @@ namespace PSP.Models.DTOs
         public DateTime Time { get; set; }
         public bool Completed { get; set; }
         public int? OrderId { get; set; }
-        public IList<DiscountWithNoRelations> Discounts { get; set; }
+        public DiscountWithNoRelations Discount { get; set; }
     }
 }

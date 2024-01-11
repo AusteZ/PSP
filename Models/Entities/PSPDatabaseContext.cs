@@ -22,7 +22,7 @@ public class PSPDatabaseContext : DbContext
     public DbSet<Discount> Discounts { get; set; } = null!;
     public DbSet<ProductDiscount> ProductsDiscounts { get; set; } = null!;
     public DbSet<ServiceDiscount> ServicesDiscounts { get; set; } = null!;
-
+    public DbSet<Receipt> Receipts { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

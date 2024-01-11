@@ -20,9 +20,10 @@ namespace PSP.Models.DTOs
         public string ProductDescription { get; set; }
     }
 
-    public class ProductWithQuantity
+    public class ProductWithDiscount
     {
         public ProductWithNoRelations Product { get; set; }
         public int Quantity { get; set; }
+        public DiscountWithNoRelations Discount { get; set; }
     }
 }
