@@ -52,6 +52,7 @@ builder.Services.AddScoped<IBaseRepository<Coupon>, CouponRepository>();
 builder.Services.AddScoped<IBaseRepository<Discount>, DiscountRepository>();
 builder.Services.AddScoped<IBaseRepository<ProductDiscount>, ProductDiscountsRepository>();
 builder.Services.AddScoped<IBaseRepository<ServiceDiscount>, ServiceDiscountsRepository>();
+builder.Services.AddScoped<IBaseRepository<Receipt>, ReceiptRepository>();
 builder.Services.AddScoped<IBaseRepository<Customer>, CustomersRepository>();
 builder.Services.AddScoped<IBaseRepository<Receipt>, ReceiptRepository>();
 
