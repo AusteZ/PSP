@@ -52,6 +52,7 @@ builder.Services.AddScoped<IBaseRepository<Coupon>, CouponRepository>();
 builder.Services.AddScoped<IBaseRepository<Discount>, DiscountRepository>();
 builder.Services.AddScoped<IBaseRepository<ProductDiscount>, ProductDiscountsRepository>();
 builder.Services.AddScoped<IBaseRepository<ServiceDiscount>, ServiceDiscountsRepository>();
+builder.Services.AddScoped<IBaseRepository<Receipt>, ReceiptRepository>();
 builder.Services.AddScoped<IBaseRepository<Customer>, CustomersRepository>();
 
 // Services
@@ -62,6 +63,7 @@ builder.Services.AddScoped<ICustomersService, CustomersService>();
 builder.Services.AddScoped<ICrudEntityService<Order, OrderCreate>, OrdersService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<ICrudEntityService<Coupon, CouponCreate>, CouponService>();
+builder.Services.AddScoped<IPaymentService, PaymentsService>();
 builder.Services.AddScoped<ICrudEntityService<Discount, DiscountCreate>, DiscountService>();
 
 builder.Services.AddControllers();
