@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using PSP.Models.DTOs.Output;
 
 namespace PSP.Models.DTOs
 {
@@ -11,6 +12,7 @@ namespace PSP.Models.DTOs
         public float EuroCost { get; set; }
         public int MinutesLength { get; set; }
         public IList<ServiceSlotWithNoRelations> ServiceSlots { get; set; }
+        public IList<DiscountWithNoRelations> Discounts { get; set; }
     }
 
     public class ServiceWithNoRelations

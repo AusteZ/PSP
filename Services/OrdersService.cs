@@ -61,8 +61,9 @@ namespace PSP.Services
             var productsList = products.ToList();
             for (var i = 0; i < productsList.Count;)
             {
-                _productsService.AddToOrder(productsList[i], order.Id, productsList.Count(x => x == productsList[i]));
-                productsList.RemoveAll(x => x == productsList[i]);
+                var productId = productsList[i];
+                _productsService.AddToOrder(productId, order.Id, productsList.Count(x => x == productId));
+                productsList.RemoveAll(x => x == productId);
             }
         }
 

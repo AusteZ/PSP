@@ -9,7 +9,7 @@ namespace PSP.Models.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        public string Userame { get; set; }
+        public string Username { get; set; }
         [Required]
         public string Password { get; set; }
         public IList<Order> Orders { get; set; }
