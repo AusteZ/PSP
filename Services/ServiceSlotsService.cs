@@ -10,11 +10,11 @@ namespace PSP.Services
     public class ServiceSlotsService : CrudEntityService<ServiceSlot, ServiceSlotCreate>, IServiceSlotsService
     {
         private readonly ICrudEntityService<Cancellation, CancellationCreate> _cancellationService;
-        private readonly ICrudEntityService<Service, ServiceCreate> _servicesService;
+        private readonly IServicesService _servicesService;
 
         public ServiceSlotsService(IBaseRepository<ServiceSlot> repository,
             ICrudEntityService<Cancellation, CancellationCreate> cancellationService,
-            ICrudEntityService<Service, ServiceCreate> servicesService, IMapper mapper) : base(repository, mapper)
+            IServicesService servicesService, IMapper mapper) : base(repository, mapper)
         {
             _cancellationService = cancellationService;
             _servicesService = servicesService;

@@ -14,5 +14,6 @@ namespace PSP.Models.Entities
         public float PriceEuros { get; set; }
         public string ProductDescription { get; set; }
         public IList<OrderProduct> Orders { get; set; } = new List<OrderProduct>();
+        public IList<ProductDiscount> Discounts { get; set; } = new List<ProductDiscount>();
     }
 }

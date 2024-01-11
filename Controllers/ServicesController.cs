@@ -11,10 +11,10 @@ namespace PSP.Controllers
     [Route("[controller]")]
     public class ServicesController : Controller
     {
-        private readonly ICrudEntityService<Service, ServiceCreate> _service;
+        private readonly IServicesService _service;
         private readonly IMapper _mapper;
 
-        public ServicesController(ICrudEntityService<Service, ServiceCreate> service, IMapper mapper)
+        public ServicesController(IServicesService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;

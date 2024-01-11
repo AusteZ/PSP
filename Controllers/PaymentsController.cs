@@ -25,15 +25,15 @@ namespace PSP.Controllers
         }
 
         [HttpPost("card")]
-        public ActionResult PayWithCard(int orderId, float tip, [FromBody] CardPayment card)
+        public ActionResult PayWithCard(int orderId, [FromBody] CardPayment card, int? couponId = null)
         {
-            return Ok(_service.PayWithCard(_mapper.Map<OrderOutput>(_orderService.Get(orderId)), card, tip));
+            return Ok(_service.PayWithCard(_mapper.Map<OrderOutput>(_orderService.Get(orderId)), card, couponId));
         }
 
         [HttpPost("cash")]
-        public ActionResult PayWithCash(int orderId, float tip)
+        public ActionResult PayWithCash(int orderId, int? couponId = null)
         {
-            return Ok(_service.PayWithCash(_mapper.Map<OrderOutput>(_orderService.Get(orderId)), tip));
+            return Ok(_service.PayWithCash(_mapper.Map<OrderOutput>(_orderService.Get(orderId)), couponId));
         }
 
         [HttpGet("Receipt/{orderId}")]

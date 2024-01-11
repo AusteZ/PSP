@@ -48,17 +48,20 @@ builder.Services.AddScoped<IBaseRepository<Cancellation>, CancellationRepository
 builder.Services.AddScoped<IBaseRepository<Product>, ProductsRepository>();
 builder.Services.AddScoped<IBaseRepository<Order>, OrdersRepository>();
 builder.Services.AddScoped<IBaseRepository<OrderProduct>, OrderProductsRepository>();
+builder.Services.AddScoped<IBaseRepository<Coupon>, CouponRepository>();
+builder.Services.AddScoped<IBaseRepository<Discount>, DiscountRepository>();
+builder.Services.AddScoped<IBaseRepository<ProductDiscount>, ProductDiscountsRepository>();
+builder.Services.AddScoped<IBaseRepository<ServiceDiscount>, ServiceDiscountsRepository>();
 builder.Services.AddScoped<IBaseRepository<Receipt>, ReceiptRepository>();
 builder.Services.AddScoped<IBaseRepository<Customer>, CustomersRepository>();
 
 // Services
-builder.Services.AddScoped<ICrudEntityService<Service, ServiceCreate>, ServicesService>();
+builder.Services.AddScoped<IServicesService, ServicesService>();
 builder.Services.AddScoped<IServiceSlotsService, ServiceSlotsService>();
 builder.Services.AddScoped<ICrudEntityService<Cancellation, CancellationCreate>, CancellationService>();
 builder.Services.AddScoped<ICustomersService, CustomersService>();
 builder.Services.AddScoped<ICrudEntityService<Order, OrderCreate>, OrdersService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
-builder.Services.AddScoped<IPaymentService, PaymentsService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

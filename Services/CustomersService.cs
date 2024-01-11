@@ -1,4 +1,5 @@
-﻿using PSP.Models.DTOs;
+﻿using AutoMapper;
+using PSP.Models.DTOs;
 using PSP.Models.Entities;
 using PSP.Repositories;
 using PSP.Services.Interfaces;
@@ -7,7 +8,7 @@ namespace PSP.Services
 {
     public class CustomersService : CrudEntityService<Customer, CustomerLogin>, ICustomersService
     {
-        public CustomersService(IBaseRepository<Customer> repository) : base(repository)
+        public CustomersService(IBaseRepository<Customer> repository, IMapper mapper) : base(repository, mapper)
         { }
 
         public Customer Authenticate(CustomerLogin customerLoginDto)

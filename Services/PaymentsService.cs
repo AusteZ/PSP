@@ -15,33 +15,35 @@ namespace PSP.Services
     {
         private readonly IBaseRepository<Receipt> _receiptRepository;
         private readonly ICrudEntityService<Order, OrderCreate> _orderService;
+        private readonly ICrudEntityService<Coupon, CouponCreate> _couponService;
         private readonly IMapper _mapper;
 
-        public PaymentsService(IBaseRepository<Receipt> repository, ICrudEntityService<Order, OrderCreate> ordersService, IMapper mapper) 
+        public PaymentsService(IBaseRepository<Receipt> repository, ICrudEntityService<Order, OrderCreate> ordersService, ICrudEntityService<Coupon, CouponCreate> couponService, IMapper mapper) 
         {
             _receiptRepository = repository;
             _orderService = ordersService;
+            _couponService = couponService;
             _mapper = mapper;
         }
 
-        public ReceiptOutput PayWithCard(OrderOutput order, CardPayment card, float tip )
+        public ReceiptOutput PayWithCard(OrderOutput order, CardPayment card, int? couponId)
         {
+            if (order.Status == PaymentStatus.completed)
+                throw new UserFriendlyException("The order is already paid for", 400);
+
             if (new CreditCardAttribute().IsValid(card.CardNumber))
                 throw new UserFriendlyException("The card number is not valid", 400);
             if (new Regex(@"^[0-9]{3,4}$").IsMatch(card.CVC))
                 throw new UserFriendlyException("The card CVC is not valid", 400);
 
-            if(order.Status == PaymentStatus.completed)
-                throw new UserFriendlyException("The order is already paid for", 400);
-
             ProcessPayment();
 
-            return SaveReceipt(order, PaymentType.card, tip);
+            return SaveReceipt(order, PaymentType.card, couponId);
         }
 
-        public ReceiptOutput PayWithCash(OrderOutput order, float tip)
+        public ReceiptOutput PayWithCash(OrderOutput order, int? couponId)
         {
-            return SaveReceipt(order, PaymentType.cash, tip);
+            return SaveReceipt(order, PaymentType.cash, couponId);
         }
 
         private void ProcessPayment()
@@ -49,7 +51,7 @@ namespace PSP.Services
             //To connect some payment gateway
         }
 
-        private ReceiptOutput SaveReceipt(OrderOutput order, PaymentType type, float tip)
+        private ReceiptOutput SaveReceipt(OrderOutput order, PaymentType type, int? couponId)
         {
             order.Status = PaymentStatus.completed;
 
@@ -58,8 +60,8 @@ namespace PSP.Services
             var receipt = new Receipt() {
                 OrderId = order.Id,
                 Date = DateTime.Now,
-                Tip = (decimal)tip,
-                Total = (decimal)(order.ServiceSlots.Select(x => x.Service.EuroCost).Concat(order.Products.Select(x => x.Product.PriceEuros * x.Quantity)).Sum() + tip),
+                Coupon = couponId == null ? _couponService.Get((int)couponId) : null!,
+                Total = (decimal)(order.ServiceSlots.Select(x => x.Service.EuroCost).Concat(order.Products.Select(x => x.Product.PriceEuros * x.Quantity)).Sum() + order.Tips),
                 PaymentType = type,
             };
             _receiptRepository.Add(receipt);
