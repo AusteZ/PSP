@@ -33,7 +33,15 @@ public class PSPDatabaseContext : DbContext
             {
                 Id = 1,
                 Username = "test",
-                Password = "123"
+                Password = "123",
+                Role = "none"
+            },
+            new Customer
+            {
+                Id = 2,
+                Username = "admin",
+                Password = "admin",
+                Role = "admin"
             }
         );
 
