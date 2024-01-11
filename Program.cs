@@ -62,6 +62,8 @@ builder.Services.AddScoped<ICrudEntityService<Cancellation, CancellationCreate>,
 builder.Services.AddScoped<ICustomersService, CustomersService>();
 builder.Services.AddScoped<ICrudEntityService<Order, OrderCreate>, OrdersService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
+builder.Services.AddScoped<ICrudEntityService<Coupon, CouponCreate>, CouponService>();
+builder.Services.AddScoped<ICrudEntityService<Discount, DiscountCreate>, DiscountService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
