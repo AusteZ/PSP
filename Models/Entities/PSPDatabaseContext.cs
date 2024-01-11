@@ -12,20 +12,6 @@ public class PSPDatabaseContext : DbContext
         Database.EnsureCreated();
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Customer>().HasData(
-            new Customer
-            {
-                Id = 1,
-                Username = "test",
-                Password = "123"
-            }
-        );
-    }
-
     public DbSet<Order> Orders { get; set; } = null!;
     public DbSet<Service> Services { get; set; } = null!;
     public DbSet<ServiceSlot> ServiceSlots { get; set; } = null!;
@@ -37,6 +23,25 @@ public class PSPDatabaseContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Customer>().HasData(
+            new Customer
+            {
+                Id = 1,
+                Username = "test",
+                Password = "123",
+                Role = "none"
+            },
+            new Customer
+            {
+                Id = 2,
+                Username = "admin",
+                Password = "admin",
+                Role = "admin"
+            }
+        );
+
         modelBuilder.Entity<Service>()
             .HasMany(p => p.ServiceSlots)
             .WithOne(d => d.Service)
