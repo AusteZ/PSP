@@ -9,6 +9,7 @@ namespace PSP.Models.DTOs
         public float PriceEuros { get; set; }
         public string ProductDescription { get; set; }
         public IList<OrderWithNoRelations> Orders { get; set; }
+        public IList<DiscountWithNoRelations> Discounts { get; set; }
     }
 
     public class ProductWithNoRelations

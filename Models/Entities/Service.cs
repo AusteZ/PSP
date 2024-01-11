@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PSP.Models.Entities.RelationalTables;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PSP.Models.Entities
@@ -13,5 +14,6 @@ namespace PSP.Models.Entities
         public float EuroCost { get; set; }
         public int MinutesLength { get; set; }
         public IList<ServiceSlot> ServiceSlots { get; set; } = new List<ServiceSlot>();
+        public IList<ServiceDiscount> Discounts { get; set; } = new List<ServiceDiscount>();
     }
 }

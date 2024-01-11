@@ -8,7 +8,6 @@ public class PSPDatabaseContext : DbContext
     public PSPDatabaseContext(DbContextOptions<PSPDatabaseContext> options)
     : base(options)
     {
-        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         Database.EnsureCreated();
     }
 
@@ -19,6 +18,10 @@ public class PSPDatabaseContext : DbContext
     public DbSet<Product> Products { get; set; } = null!;
     public DbSet<Customer> Customers { get; set; } = null!;
     public DbSet<OrderProduct> OrderProducts { get; set; } = null!;
+    public DbSet<Coupon> Coupons { get; set; } = null!;
+    public DbSet<Discount> Discounts { get; set; } = null!;
+    public DbSet<ProductDiscount> ProductsDiscounts { get; set; } = null!;
+    public DbSet<ServiceDiscount> ServicesDiscounts { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -63,5 +66,27 @@ public class PSPDatabaseContext : DbContext
             .HasOne(ss => ss.Order)
             .WithMany(o => o.ServiceSlots)
             .HasForeignKey(ss => ss.OrderId);
+
+        modelBuilder.Entity<ProductDiscount>()
+            .HasKey(pd => new { pd.ProductId, pd.DiscountId });
+        modelBuilder.Entity<ProductDiscount>()
+            .HasOne(pd => pd.Discount)
+            .WithMany(d => d.Products)
+            .HasForeignKey(pd => pd.DiscountId);
+        modelBuilder.Entity<ProductDiscount>()
+            .HasOne(pd => pd.Product)
+            .WithMany(d => d.Discounts)
+            .HasForeignKey(pd => pd.ProductId);
+
+        modelBuilder.Entity<ServiceDiscount>()
+            .HasKey(pd => new { pd.ServiceId, pd.DiscountId });
+        modelBuilder.Entity<ServiceDiscount>()
+            .HasOne(pd => pd.Discount)
+            .WithMany(d => d.Services)
+            .HasForeignKey(pd => pd.DiscountId);
+        modelBuilder.Entity<ServiceDiscount>()
+            .HasOne(pd => pd.Service)
+            .WithMany(d => d.Discounts)
+            .HasForeignKey(pd => pd.ServiceId);
     }
 }

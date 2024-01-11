@@ -9,12 +9,12 @@ namespace PSP.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ServicesController : Controller
+    public class CouponController : Controller
     {
-        private readonly IServicesService _service;
+        private readonly ICrudEntityService<Coupon, CouponCreate> _service;
         private readonly IMapper _mapper;
 
-        public ServicesController(IServicesService service, IMapper mapper)
+        public CouponController(ICrudEntityService<Coupon, CouponCreate> service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -23,25 +23,25 @@ namespace PSP.Controllers
         [HttpGet]
         public ActionResult GetAll()
         {
-            return Ok(_mapper.Map<IEnumerable<ServiceOutput>>(_service.GetAll()));
+            return Ok(_mapper.Map<IEnumerable<CouponOutput>>(_service.GetAll()));
         }
 
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return Ok(_mapper.Map<ServiceOutput>(_service.Get(id)));
+            return Ok(_mapper.Map<CouponOutput>(_service.Get(id)));
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] ServiceCreate body)
+        public ActionResult Post([FromBody] CouponCreate body)
         {
-            return Ok(_mapper.Map<ServiceOutput>(_service.Add(body)));
+            return Ok(_mapper.Map<CouponOutput>(_service.Add(body)));
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody]ServiceCreate body)
+        public ActionResult Put(int id, [FromBody] CouponCreate body)
         {
-            return Ok(_mapper.Map<ServiceOutput>(_service.Update(body, id)));
+            return Ok(_mapper.Map<CouponOutput>(_service.Update(body, id)));
         }
 
         [HttpDelete("{id}")]
@@ -50,5 +50,6 @@ namespace PSP.Controllers
             _service.Delete(id);
             return NoContent();
         }
+
     }
 }
