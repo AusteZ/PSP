@@ -8,5 +8,6 @@ namespace PSP.Services.Interfaces
         public void Book(int id, int orderId);
         public void Cancel(int id);
         public IEnumerable<ServiceSlot> GetFiltered(int? employeeId, int? serviceId, bool? isFree);
+        public void Complete(int id);
     }
 }

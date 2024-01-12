@@ -1,4 +1,5 @@
-﻿using PSP.Models.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using PSP.Models.Entities;
 using PSP.Models.Entities.RelationalTables;
 
 namespace PSP.Repositories
@@ -9,7 +10,7 @@ namespace PSP.Repositories
 
         public override OrderProduct? Find(params int[] ids)
         {
-            return _dbSet.Find(ids[0], ids[1]);
+            return _dbSet.Include(e => e.Order).Include(e => e.Product).FirstOrDefault(e => e.ProductId == ids[0] && e.OrderId == ids[1]);
         }
     }
 }

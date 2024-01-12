@@ -61,6 +61,13 @@ namespace PSP.Services
             base.Update(slot);
         }
 
+        public void Complete(int id)
+        {
+            var slot = base.Get(id);
+            slot.Completed = true;
+            base.Update(slot);
+        }
+
         public IEnumerable<ServiceSlot> GetFiltered(int? employeeId, int? serviceId, bool? isFree)
         {
             var query = _repository.GetQueryable();
