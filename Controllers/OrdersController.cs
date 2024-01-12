@@ -11,10 +11,10 @@ namespace PSP.Controllers
     [Route("[controller]")]
     public class OrdersController : Controller
     {
-        private readonly ICrudEntityService<Order, OrderCreate> _service;
+        private readonly IOrdersService _service;
         private readonly IMapper _mapper;
 
-        public OrdersController(ICrudEntityService<Order, OrderCreate> service, IMapper mapper)
+        public OrdersController(IOrdersService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -49,6 +49,12 @@ namespace PSP.Controllers
         {
             _service.Delete(id);
             return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public ActionResult Patch(int id, [FromBody] OrderPatch body)
+        {
+            return Ok(_mapper.Map<OrderOutput>(_service.UpdateProperties(id, body)));
         }
     }
 }
