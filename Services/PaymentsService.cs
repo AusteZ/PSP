@@ -15,13 +15,15 @@ namespace PSP.Services
         private readonly IBaseRepository<Receipt> _receiptRepository;
         private readonly IOrdersService _orderService;
         private readonly ICrudEntityService<Coupon, CouponCreate> _couponService;
+        private readonly ICustomersService _customersService;
 
         public PaymentsService(IBaseRepository<Receipt> repository, IOrdersService ordersService,
-            ICrudEntityService<Coupon, CouponCreate> couponService)
+            ICrudEntityService<Coupon, CouponCreate> couponService, ICustomersService customersService) 
         {
             _receiptRepository = repository;
             _orderService = ordersService;
             _couponService = couponService;
+            _customersService = customersService;
         }
 
         public Receipt PayWithCard(int orderId, CardPayment card, int? couponId )
@@ -64,7 +66,11 @@ namespace PSP.Services
                 _couponService.Update(coupon);
             }
 
-            var receipt = new Receipt() {
+            var loyaltyPointsUsed = Math.Min(order.LoyaltyPointsToUse, order.Customer.LoyaltyPoints);
+            loyaltyPointsUsed = Math.Min(loyaltyPointsUsed, Convert.ToInt32(totalPrice * 100));
+            totalPrice -= (float)loyaltyPointsUsed / 100;
+
+            var receipt = new Receipt {
                 OrderId = order.Id,
                 Date = DateTime.Now,
                 Total = totalPrice,
@@ -72,6 +78,9 @@ namespace PSP.Services
                 PaymentType = type,
             };
             _receiptRepository.Add(receipt);
+            order.Customer.LoyaltyPoints -= loyaltyPointsUsed;
+            order.Customer.LoyaltyPoints += Convert.ToInt32(totalPrice);
+            _customersService.Update(order.Customer);
             return receipt;
         }
 
