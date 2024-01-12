@@ -63,6 +63,8 @@ namespace PSP.Services
 
             if (properties.Tips != null)
                 order.Tips = properties.Tips.Value;
+            if (properties.LoyaltyPointsToUse != null)
+                order.LoyaltyPointsToUse = properties.LoyaltyPointsToUse.Value;
 
             RemoveServices(properties.ServiceSlotsToRemove);
             AddServices(properties.ServiceSlotsToAdd, order);

@@ -32,9 +32,9 @@ namespace PSP.Services
             if (order.Status == PaymentStatus.completed)
                 throw new UserFriendlyException("The order is already paid for", 400);
 
-            if (new CreditCardAttribute().IsValid(card.CardNumber))
+            if (!new CreditCardAttribute().IsValid(card.CardNumber))
                 throw new UserFriendlyException("The card number is not valid", 400);
-            if (new Regex(@"^[0-9]{3,4}$").IsMatch(card.CVC))
+            if (!new Regex(@"^[0-9]{3,4}$").IsMatch(card.CVC))
                 throw new UserFriendlyException("The card CVC is not valid", 400);
 
             ProcessPayment();

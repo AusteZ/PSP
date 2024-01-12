@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
 using PSP.Models.DTOs.Output;
@@ -57,6 +58,14 @@ namespace PSP.Controllers
         public ActionResult Cancel(int id)
         {
             _service.Cancel(id);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("{id}/complete")]
+        public ActionResult Complete(int id)
+        {
+            _service.Complete(id);
             return Ok();
         }
 

@@ -7,5 +7,6 @@
         public IList<int> ProductsToAdd { get; set; } = new List<int>();
         public IList<int> ProductsToRemove { get; set; } = new List<int>();
         public float? Tips { get; set; }
+        public int? LoyaltyPointsToUse { get; set; }
     }
 }
