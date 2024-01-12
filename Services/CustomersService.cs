@@ -23,7 +23,7 @@ namespace PSP.Services
         {
             var customer = _mapper.Map<Customer>(dto);
             customer.Id = id;
-            customer.Role = "none";
+            customer.Role = dto.Role;
             return customer;
         }
     }
