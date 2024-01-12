@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
 using PSP.Models.DTOs.Output;
@@ -20,18 +21,21 @@ namespace PSP.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult GetAll()
         {
             return Ok(_mapper.Map<IEnumerable<DiscountOutput>>(_service.GetAll()));
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
             return Ok(_mapper.Map<DiscountOutput>(_service.Get(id)));
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult Post([FromBody] DiscountCreate body)
         {
@@ -39,12 +43,14 @@ namespace PSP.Controllers
             return Ok(test);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] DiscountCreate body)
         {
             return Ok(_mapper.Map<DiscountOutput>(_service.Update(body, id)));
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
 using PSP.Models.DTOs.Output;
@@ -21,30 +22,35 @@ namespace PSP.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult GetAll()
         {
             return Ok(_mapper.Map<IEnumerable<ProductOutput>>(_service.GetAll()));
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
             return Ok(_mapper.Map<ProductOutput>(_service.Get(id)));
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult Post([FromBody] ProductCreate body)
         {
             return Ok(_mapper.Map<ProductOutput>(_service.Add(body)));
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] ProductCreate body)
         {
             return Ok(_mapper.Map<ProductOutput>(_service.Update(body, id)));
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
@@ -52,6 +58,7 @@ namespace PSP.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPost("{id}/addToOrder")]
         public ActionResult AddToOrder(int id, [FromQuery] int orderId, [FromQuery] int quantity = 1)
         {
@@ -59,6 +66,7 @@ namespace PSP.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPost("{id}/removeFromOrder")]
         public ActionResult RemoveFromOrder(int id, [FromQuery] int orderId, [FromQuery] int quantity = 1)
         {

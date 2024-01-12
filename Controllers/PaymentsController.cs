@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
 using PSP.Models.DTOs.Output;
@@ -22,18 +23,21 @@ namespace PSP.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpPost("card")]
         public ActionResult PayWithCard(int orderId, [FromBody] CardPayment card, int? couponId = null)
         {
             return Ok(_mapper.Map<ReceiptOutput>(_service.PayWithCard(orderId, card, couponId)));
         }
 
+        [Authorize]
         [HttpPost("cash")]
         public ActionResult PayWithCash(int orderId, int? couponId = null)
         {
             return Ok(_mapper.Map<ReceiptOutput>(_service.PayWithCash(orderId, couponId)));
         }
 
+        [Authorize]
         [HttpGet("Receipt/{orderId}")]
         public ActionResult GetOrderReceipt(int orderId)
         {
@@ -41,6 +45,7 @@ namespace PSP.Controllers
         }
 
         // TODO: no orders showing up, need to fix
+        [Authorize]
         [HttpGet("Receipt")]
         public ActionResult GetAllOrderReceipts()
         {

@@ -11,6 +11,8 @@ using PSP.Models.Entities.RelationalTables;
 using PSP.Repositories;
 using PSP.Services;
 using PSP.Services.Interfaces;
+using Microsoft.OpenApi.Models;
+using PSP.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +72,19 @@ builder.Services.AddScoped<IPaymentService, PaymentsService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 
 var app = builder.Build();
 

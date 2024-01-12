@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PSP.Models.DTOs;
 using PSP.Models.DTOs.Output;
@@ -22,24 +23,28 @@ namespace PSP.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult GetAll([FromQuery] int? employeeIdFilter, [FromQuery] int? serviceIdFilter, [FromQuery] bool? isFree)
         {
             return Ok(_mapper.Map<IEnumerable<ServiceSlotOutput>>(_service.GetFiltered(employeeIdFilter, serviceIdFilter, isFree)));
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
             return Ok(_mapper.Map<ServiceSlotOutput>(_service.Get(id)));
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult Post([FromBody] ServiceSlotCreate body)
         {
             return Ok(_mapper.Map<ServiceSlotOutput>(_service.Add(body)));
         }
 
+        [Authorize]
         [HttpPost("{id}/book")]
         public ActionResult Book(int id, [FromQuery] int orderId)
         {
@@ -47,12 +52,14 @@ namespace PSP.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet("cancellations")]
         public ActionResult GetCancellations()
         {
             return Ok(_cancellationEntityService.GetAll());
         }
 
+        [Authorize]
         [HttpPost("{id}/cancel")]
         public ActionResult Cancel(int id)
         {
@@ -60,12 +67,14 @@ namespace PSP.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] ServiceSlotCreate body)
         {
             return Ok(_mapper.Map<ServiceSlotOutput>(_service.Update(body, id)));
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
