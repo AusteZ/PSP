@@ -12,10 +12,10 @@ namespace PSP.Controllers
     public class PaymentsController : Controller
     {
         private readonly IPaymentService _service;
-        private readonly ICrudEntityService<Order, OrderCreate> _orderService;
+        private readonly IOrdersService _orderService;
         private readonly IMapper _mapper;
 
-        public PaymentsController(IPaymentService service, ICrudEntityService<Order, OrderCreate> orderService, IMapper mapper)
+        public PaymentsController(IPaymentService service, IOrdersService orderService, IMapper mapper)
         {
             _service = service;
             _orderService = orderService;

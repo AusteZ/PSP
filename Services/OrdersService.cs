@@ -8,7 +8,7 @@ using PSP.Services.Interfaces;
 
 namespace PSP.Services
 {
-    public class OrdersService : CrudEntityService<Order, OrderCreate>
+    public class OrdersService : CrudEntityService<Order, OrderCreate>, IOrdersService
     {
         private readonly IServiceSlotsService _serviceSlotsService;
         private readonly IProductsService _productsService;
@@ -46,7 +46,7 @@ namespace PSP.Services
 
             RemoveProducts(oldProducts.Select(x => x.ProductId), oldEntity.Id);
             AddProducts(entity.ProductsIds, order);
-            return Get(order.Id); ;
+            return Get(order.Id);
         }
 
         public override Order Add(OrderCreate entity)
@@ -55,6 +55,23 @@ namespace PSP.Services
             AddServices(entity.serviceSlotIds, order);
             AddProducts(entity.ProductsIds, order);
             return order;
+        }
+
+        public Order UpdateProperties(int orderId, OrderPatch properties)
+        {
+            var order = Get(orderId);
+
+            if (properties.Tips != null)
+                order.Tips = properties.Tips.Value;
+
+            RemoveServices(properties.ServiceSlotsToRemove);
+            AddServices(properties.ServiceSlotsToAdd, order);
+
+            RemoveProducts(properties.ProductsToRemove, order.Id);
+            AddProducts(properties.ProductsToAdd, order);
+
+            Update(order);
+            return Get(orderId);
         }
 
         private void AddProducts(IEnumerable<int> products, Order order)
